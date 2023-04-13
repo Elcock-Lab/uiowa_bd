@@ -42,7 +42,7 @@ The bulk of the source code is all contained in the single folder `SOURCE`; addi
 
 **Before compiling you will need to do the following:**
 
-1. add ifort to your `PATH` ; **for example**, with our old installation of ifort we use:
+1. add ifort to your `PATH` ; **for example**, with our very old installation of ifort we use the following:
 
 `export PATH=$PATH:/opt/intel/compilers_and_libraries_2016.2.181/linux/bin/intel64`
 
