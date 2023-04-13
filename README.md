@@ -1,6 +1,42 @@
 # *uiowa_bd*
+
+
 ## Overview
 *uiowa_bd* is a parallelized program that performs Brownian dynamics (BD) simulations of macromolecules. It uses simple molecular mechanics models of the kind widely used in other simulation codes to model the internal degrees of freedom of molecules, but also has the ability to include hydrodynamic interactions (HIs) between atoms or beads, calculated at the Rotne-Prager-Yamakawa level of theory. This makes it useful for accurately simulating the translational and rotational diffusion of macromolecules, as well as their associations, in a fundamentally implicit solvent model. A number of example directories are provided with the source code that illustrate different uses of *uiowa_bd*.
+
+
+## Referencing uiowa_bd
+The following lists the principal papers that have been marked the development of *uiowa_bd*. If you have to cite only one publication then it makes sense for this to be the most recent (Tworek & Elcock, 2023) since this paper coincides with the release of this version of the code. However, depending on what features of the code you use, you may need to cite additional publications (see treecode and fixman entries below).
+
+Tworek JW, Elcock AH. **An orientationally averaged version of the Rotne-Prager-Yamakawa tensor provides a fast but still accurate treatment of hydrodynamic interactions in Brownian dynamics simulations of biological macromolecules.** (preprint). *bioRxiv.* 2023
+
+Frembgen-Kesner T, Elcock AH. (2009) **Striking effects of hydrodynamic interactions on the simulated diffusion and folding of proteins.** *J Chem Theory Comput* **5**:242-256
+
+Elcock AH. (2006) **Molecular simulations of cotranslational protein folding: fragment stabilities, folding cooperativity, and trapping in the ribosome.** *PLoS Comput Biol* **2**:e98
+
+## External References and Contributions Made by Others
+Most of the code was written from the ground-up by AHE. However, certain key parts of the code were taken from other sources. These include:
+
+1. code for handling bond angle and dihedral angle calculations was, if I remember correctly, adapted from code that I found online *many* years ago written by Prof. Jay Ponder (Department of Chemistry, Washington University, St. Louis, MO) and which probably formed part of his TINKER simulation package. For much more up-to-date versions of TINKER, please see Prof. Ponder's website: https://dasher.wustl.edu/tinker/
+
+2. the treecode routine that is used for calculating long-range (Debye-Hückel) electrostatic interactions comes from the group of Prof. Robert Krasny. One of the primary authors of that code – Hans Johnston – was extremely generous in helping me adapt the code for use in *uiowa_bd*. If that is used please cite:
+
+    Li P, Johnston H, Krasny R. (2009) **A Cartesian treecode for screened coulomb interactions.** *J Comput Phys* **228**:3858-3868  
+
+3. code for writing trajectory coordinates to a compressed .xtc file came indirectly from GROMACS many years ago. A former member of my group, Dr Shun Zhu, figured out how to call that code from within *uiowa_bd*. He did this after having obtained code from two separate sources, both of whose URLs unfortunately appear now to be dead. One piece of the puzzle was the ego2xtc Fortran program which contained "writextc" and "readxtc" subroutines; that code was obtained via the following now-dead link: http://www.gromacs.org/Downloads/User_contributions/Other_software). The second piece of the puzzle was the xdrf library (written by Frans van Hoese as part of the EUROPORT project) which Shun obtained from the following now-dead link: http://hpcv100.rc.rug.nl/xdrfman.html. I cannot claim to understand how any of these routines work, but they clearly do when the final library file (libxdrf.a) is passed to *uiowa_bd*. Sorry, but I don't know how better to cite this. 
+
+4. the code that allows Prof Marshall Fixman’s Chebyshev polynomial-based method to be used to calculate correlated random displacements borrows very heavily from a corresponding C routine that was written by Prof Tihamer Geyer and implemented in his BD code. If the Fixman code is used please consider citing:
+
+    Geyer T. (2011) **Many-particle Brownian and Langevin dynamics simulations with the Brownmove package.** *BMC Biophyics* **4**:7
+
+5. while the current version of the code uses the Intel MKL routine spotrf to compute the Cholesky decomposition of the diffusion tensor, I want to acknowledge Dr Jonathan Hogg’s help in implementing an earlier openmp-parallelized routine for performing the same operation (HSL_MP54). It was Dr Hogg’s Cholesky decomposition code that enabled a number of our earlier studies with *uiowa_bd* to be completed.
+
+    Hogg JD (2008) **A DAG-based parallel Cholesky Factorization for multicore systems.** Technical Report TR-RAL-2008-029
+
+6. code for writing trajectory coordinates to movie .pdb files was partly written by Dr Tyson Shepherd while he was rotating in my group many years ago.
+
+
+
 ## Installation and compilation
 The bulk of the source code is all contained in the single folder `SOURCE`; additional code that handles the reading and writing of .xtc trajectory files (and that I didn’t write!) is in the sub-folder `XTC`. A makefile is provided that “gets the job done”, but I don’t claim that this makefile is well-written: I barely understand how makefiles work, and I stopped refining the one provided as soon as it looked like it worked. All of the code is written in Fortran. I assume that the user will compile the code with Intel’s Fortran compiler (ifort) and with Intel’s Math Kernel Library (MKL) installed. The code can probably be adapted to compile with gfortran relatively easily, but care will be needed with routines that are currently handled by MKL: these include the calculation of random numbers, the spotrf routine that is used to compute the Cholesky decomposition of the diffusion tensor, and possibly some others. I am sorry to say that if you attempt to get the code working with any compiler other than ifort you will be on your own. 
 
@@ -43,19 +79,6 @@ note that the first command compiles the mkl include file copied in stage 2.
 The *uiowa_bd* source code has been written over a number of years and there have been many cases where features (e.g. replica exchange) have been added to the code and then deprecated before ever appearing in publication form. I have done my best to remove “dead” code but there is still likely to be some remaining. The present version represents a near-final version that, while definitely useful for production level simulations now, is unlikely to be a focus for further serious development in my group. This is for the following reasons. First, while the uiowa_bd code is effective for small- to medium-sized systems it is not well suited to simulating very large-scale systems that are starting to become of interest to my lab. Second, some of the decisions about code-structure that were made early in the code’s development would not be made today: the code is far more complicated than it needs to be in places, and this hampers efforts to build in fundamentally new approaches. Third, while the code typically achieves nice speedups using openmp, its raw (single-core) speed is not what it could be: a good chunk of this is likely attributable to the non-optimal way in which much of the data is stored in memory and accessed during calculations. Fourth, the existing code is entirely unaware of the possibility of using GPUs for compute-intensive calculations, which makes it seem something of a dinosaur now. While all of the above issues are, in principle, quite fixable, the underlying code-structure of uiowa_bd is sufficiently byzantine that a better approach is likely to be starting from scratch with an entirely new code.
 ### A note on the coding style
 While the *uiowa_b*d code makes use of a number of Fortran90 constructs (especially allocatable arrays plus the odd pointer and derived type here and there), it is written in the style of Fortran77. This is why all of the source file extensions are “.f” and not “.f90”. A professional programmer would almost certainly laugh at the way *uiowa_bd* is written. While some readers of this might be tempted to undertake reformatting and rewriting of the code to make it fully Fortran90-compliant, I don’t recommend this given that the code is unlikely to undergo any further serious development by me (see above).
-
-## Referencing uiowa_bd
-The following lists the principal papers that have been marked the development of *uiowa_bd*. If you have to cite only one publication then it makes sense for this to be the most recent (Tworek & Elcock, 2023) since this paper coincides with the release of this version of the code. However, depending on what features of the code you use, you may need to cite additional publications (see treecode and fixman entries below).
-## External References and Contributions Made by Others
-Most of the code was written from the ground-up by AHE. However, certain key parts of the code were taken from other sources. These include:
-1. code for handling bond angle and dihedral angle calculations was, if I remember correctly, adapted from corresponding code written by Prof. Jay Ponder in this TINKER simulation package.
-2. the treecode routine that is used for calculating long-range (Debye-Hückel) electrostatic interactions comes from the group of Prof. Robert Krasny. The primary author of that code – Hans Johnston – was extremely generous in helping me adapt the code for use in uiowa_bd. If that is used please cite:
-
-3. code for writing trajectory coordinates to a compressed .xtc files comes from somewhere. A former member of my group, Dr Shun Zhu, figured out how to call that code from within *uiowa_bd*.
-4. the code that allows Prof Marshall Fixman’s Chebyshev polynomial-based method to be used to calculate correlated random displacements borrows very heavily from a corresponding C routine that was written by Prof Tihamer Geyer and implemented in his BD code. If the fixman code is used please cite:
-
-5. while the current version of the code uses the Intel MKL routine spotrf to compute the Cholesky decomposition of the diffusion tensor, I want to acknowledge Dr Jonathan Hogg’s help in implementing an earlier parallelized routine for doing the same thing (HSL_MP54). It was Dr Hogg’s Cholesky decomposition code that enabled a number of our earlier studies with uiowa_bd to be completed.
-6. code for writing trajectory coordinates to movie .pdb files was partly written by Dr Tyson Shepherd while he was rotating in my group many years ago.
 
 
 ## Using *uiowa_bd*: running the code
