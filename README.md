@@ -86,7 +86,7 @@ This contains one line per atom type present in the system. The atom type is dic
 
 ### uiowa_bd input file format:
 
-In what follows, all input parameters are grouped together by the line that they appear on in the input file
+Input files for a number of example situations are provided in the EXAMPLES folder. In what follows, all of the parameters listed in these input files are grouped together by the line that they appear on in the input file
 
 ---
 
@@ -133,143 +133,143 @@ if mol_Q1 <> mol_Q2 then we are monitoring the formation of intermolecular conta
 
 ---
 
-xmin, xmax, ymin, ymax, zmin, zmax (A) : min and max extents of the simulation box – I always set these so that they are symmetric about the origin so please do the same
+**xmin, xmax, ymin, ymax, zmin, zmax** (A) : min and max extents of the simulation box – I always set these so that they are symmetric about the origin so please do the same
 
-i_pbc : =1 to use periodic boundary conditions ; =0 to not use periodic boundary conditions
+**i_pbc** : =1 to use periodic boundary conditions ; =0 to not use periodic boundary conditions
 
-i_look_for_crashes? : if “yes” then monitor bonds with bond_dev_quit
+**i_look_for_crashes?** : if “yes” then monitor bonds with bond_dev_quit
 
-i_limit_verbosity? : if “yes” then don’t write out too much garbage to the uiowa_bd output file
+**i_limit_verbosity?** : if “yes” then don’t write out too much garbage to the uiowa_bd output file
 
-i_use_v_typ : if “1” Lennard-Jones 12-10 potential functions are used throughout…
+**i_use_v_typ** : if “1” Lennard-Jones 12-10 potential functions are used throughout…
 
-steepest_descent? : if “yes” then do a steepest-descent energy minimization instead of BD; by definition, no HIs are included and the timestep (specified below) serves as a multiplier to convert force into a displacement
-
----
-
-temperature (K)
-
-ionic_strength (mM)
-
-r_ion (A) : radius of ion used in Debye-Hckel calculations ; since the treecode electrostatic routine assumes that this is zero then I would stick to using r_ion = 0.0
-
-dielectric : relative dielectric constant (78.40 for water at 298K)
-
-viscosity (cP)
-
-r_f_st: if set to a positive number, allows the 1/r12 repulsion to be replaced by a much shallower harmonic repulsion but only when the distance between two atoms is less than the distance at which their LJ potential is most favorable ; r_f_st functions as the force constant for the harmonic repulsion. If r_f_st is set <= 0 then the usual 12-10 LJ potential is calculated.
+**steepest_descent?** : if “yes” then do a steepest-descent energy minimization instead of BD; by definition, no HIs are included and the timestep (specified below) serves as a multiplier to convert force into a displacement
 
 ---
 
-parameter_file : name of parameter file containing Lennard-Jones parameters
+**temperature** (K)
 
-no_elec? : if “yes” then skip electrostatic calculations entirely
+**ionic_strength** (mM)
 
-wrap_molecules : controls behavior of molecules’ coordinates as written to .xtc file
+**r_ion** (A) : radius of ion used in Debye-Hckel calculations ; since the treecode electrostatic routine assumes that this is zero then I would stick to using r_ion = 0.0
+
+**dielectric** : relative dielectric constant (78.40 for water at 298K)
+
+**viscosity** (cP)
+
+**r_f_st**: if set to a positive number, allows the 1/r12 repulsion to be replaced by a much shallower harmonic repulsion but only when the distance between two atoms is less than the distance at which their LJ potential is most favorable ; r_f_st functions as the force constant for the harmonic repulsion. If r_f_st is set <= 0 then the usual 12-10 LJ potential is calculated.
+
+---
+
+**parameter_file** : name of parameter file containing Lennard-Jones parameters
+
+**no_elec?** : if “yes” then skip electrostatic calculations entirely
+
+**wrap_molecules** : controls behavior of molecules’ coordinates as written to .xtc file
 
 	if “0” then do this
 	if “1” then do this
 	if “2” then do this
   
-HI_mode : if “none” then no HI ; if “RPY” then use Rotne-Prager-Yamakawa HI ; if “OARPY” then use orientationally averaged RPY
+**HI_mode** : if “none” then no HI ; if “RPY” then use Rotne-Prager-Yamakawa HI ; if “OARPY” then use orientationally averaged RPY
 
-scale_nb : DEPRECATED NEED TO DELETE LOTS OF HSL STUFF
+**scale_nb** : DEPRECATED NEED TO DELETE LOTS OF HSL STUFF
 
-BD/LD : if “brownian” use Ermak-McCammon algorithm ; if “langevin” use Geyer & Winter’s Langevin dynamics algorithm
+**BD/LD** : if “brownian” use Ermak-McCammon algorithm ; if “langevin” use Geyer & Winter’s Langevin dynamics algorithm
 
 ---
 
-go_potentials_file : name of file storing all Go contact pairs and their parameters – if you are not using Go contact pairs then just provide a junk file name here
+**go_potentials_file** : name of file storing all Go contact pairs and their parameters – if you are not using Go contact pairs then just provide a junk file name here
 
-i_use_go_pairs? : if “yes” then read the go_potentials_file and calculate Go pairs between appropriate atoms during the simulations; if “no” then go_potentials_file is NOT read, and all nonbonded interactions are treated as regular atoms, i.e. with LJ 12-10 potentials and electrostatic interactions
+**i_use_go_pairs?** : if “yes” then read the go_potentials_file and calculate Go pairs between appropriate atoms during the simulations; if “no” then go_potentials_file is NOT read, and all nonbonded interactions are treated as regular atoms, i.e. with LJ 12-10 potentials and electrostatic interactions
 
-go_primacy : controls how Go contact potentials are combined with electrostatic interactions when atoms in a contact also bear charges ; if =1 then we only use LJ 12-10 potential function ; if =2 then we use LJ 12-10 potential function and electrostatic interaction. 
+**go_primacy** : controls how Go contact potentials are combined with electrostatic interactions when atoms in a contact also bear charges ; if =1 then we only use LJ 12-10 potential function ; if =2 then we use LJ 12-10 potential function and electrostatic interaction. 
 
-i_skip_intermol_go? : if “yes” then only consider Go pairs between atoms in same molecule ; all intermolecular interactions are treated as regular Lennard-Jones
+**i_skip_intermol_go?** : if “yes” then only consider Go pairs between atoms in same molecule ; all intermolecular interactions are treated as regular Lennard-Jones
 
-nomove_file : name of file that lists all atoms that don’t move – they are listed one on each line – each says moltype and atomnumber
+**nomove_file** : name of file that lists all atoms that don’t move – they are listed one on each line – each says moltype and atomnumber
 
-i_dont_move_some? : if “yes” then we will read the nomove_file to find atoms that are static. We assume that all moving atoms are listed before all static atoms.
+**i_dont_move_some?** : if “yes” then we will read the nomove_file to find atoms that are static. We assume that all moving atoms are listed before all static atoms.
 
 ---
 
 for each of the “f_typs” molecule type in the system, provide:
 
-1. name of charge.parameters file for this molecule type
-2. name of internal.parameters file for this molecule type
+1. name of **charge.parameters** file for this molecule type
+2. name of **internal.parameters** file for this molecule type
 3. number of copies of this molecule type
 
-note that total number of all copies of all molecule types must equal “f_mols”
+note that total number of all copies of all molecule types must equal **f_mols**
 
 ---
 
-time_step (ps) : simulation time step
+**time_step** (ps) : simulation time step
 
-totsimtime (ps) : total length of the simulation
+**totsimtime** (ps) : total length of the simulation
 
-vdw_s (A) : short-range Lennard-Jones cutoff – interactions recalculated every step
+**vdw_s** (A) : short-range Lennard-Jones cutoff – interactions recalculated every step
 
-vdw_m (A) : medium-range Lennard-Jones cutoff – interactions with distance > vdw_s but < vdw_m are recalculated every num_fmd_stp timesteps
+**vdw_m** (A) : medium-range Lennard-Jones cutoff – interactions with distance > vdw_s but < vdw_m are recalculated every num_fmd_stp timesteps
 
-goe_s (A) : short-range cutoff for Go contact pairs – interactions recalculated every step
+**goe_s** (A) : short-range cutoff for Go contact pairs – interactions recalculated every step
 
-goe_m (A) : medium-range cutoff for Go contact pairs – interactions with distance > goe_s but < goe_m are recalculated every num_fmd_stp timesteps
+**goe_m** (A) : medium-range cutoff for Go contact pairs – interactions with distance > goe_s but < goe_m are recalculated every num_fmd_stp timesteps
 
-ele_s (A) : short-range electrostatic cutoff – interactions recalculated every step
+**ele_s** (A) : short-range electrostatic cutoff – interactions recalculated every step
 
-ele_m (A) : medium-range electrostatic cutoff – interactions with distance > ele_s but < ele_m are recalculated every num_fmd_stp timesteps
+**ele_m** (A) : medium-range electrostatic cutoff – interactions with distance > ele_s but < ele_m are recalculated every num_fmd_stp timesteps
 
-f_f_cell_size (A) : size of cell used to accelerate construction of nonbonded pair list ; atom/bead pairs in all neighboring cells are examined for possible interactions – f_f_cell_size must be equal to or greater than the largest of the six cutoffs identified above.
-
----
-
-position_restraint_file : file listing any position restraints applied to atoms – if you are not using any position restraints then just provide a junk file name here
-
-i_do_pos_restraints? : if “yes” then read and use the position_restraint_file
-
-mission_creep? : if “yes” then the reference positions used for position_restraints are allowed to “creep” DEPRECATED REMOVE
+**f_f_cell_size** (A) : size of cell used to accelerate construction of nonbonded pair list ; atom/bead pairs in all neighboring cells are examined for possible interactions – f_f_cell_size must be equal to or greater than the largest of the six cutoffs identified above.
 
 ---
 
-r_size (A) : radius of encapsulating sphere centered on the origin ; if <0 then there is no encapsulating sphere
+**position_restraint_file** : file listing any position restraints applied to atoms – if you are not using any position restraints then just provide a junk file name here
 
-l_size (A) : length of encapsulating cylinder, which is assumed to be capped by hemispheres of radius r_size at either end ; if <0 then there is no encapsulating cylinder
+**i_do_pos_restraints?** : if “yes” then read and use the position_restraint_file
 
-r_size_fac ; factor by which to scale r_size and l_size by – only applicable if n_size > 0
-
-n_size : number of steps over which to linearly scale radius back from its initial value to r_size – this works for a shrinking sphere, a shrinking capsule, and a shrinking 3D box
-
-f_size (kcal/mol/A2) : force constant for the capsule-wall interaction
+**mission_creep?** : if “yes” then the reference positions used for position_restraints are allowed to “creep” DEPRECATED REMOVE
 
 ---
 
-fixman? : if “yes” then use Fixman’s Chebyshev polynomial method instead of Cholesky decomposition to calculate correlated random displacements during BD-HI simulations
+**r_size** (A) : radius of encapsulating sphere centered on the origin ; if <0 then there is no encapsulating sphere
 
-fixman_tol : tolerance on error estimate (Ek) used to determine convergence of the random displacements ; smaller values will require more steps to converge
+**l_size** (A) : length of encapsulating cylinder, which is assumed to be capped by hemispheres of radius r_size at either end ; if <0 then there is no encapsulating cylinder
 
-fixman_order : # of terms to include in the Chebyshev polynomial method
+**r_size_fac** ; factor by which to scale r_size and l_size by – only applicable if n_size > 0
 
-fixman_override? : if “yes” then override the true minimum and maximum eigenvalues (which will otherwise be calculated by uiowa_bd) with the following estimates (lmin & lmax)
+**n_size** : number of steps over which to linearly scale radius back from its initial value to r_size – this works for a shrinking sphere, a shrinking capsule, and a shrinking 3D box
 
----
-
-treecode? : if “yes” then use the Krasny group’s electrostatic treecode to recalculate all long-range electrostatic interactions at intervals of num_lst_stp steps
-
-theta : multiple acceptance criterion used to decide whether to use a multipole expansion in place of the exact calculation
-
-order : order of multipole expansion
-
-shrink : 1
-
-maxatm : max # of atoms to do something with
+**f_size** (kcal/mol/A2) : force constant for the capsule-wall interaction
 
 ---
 
-walls? : if “yes” then apply walls in one or more directions
+**fixman?** : if “yes” then use Fixman’s Chebyshev polynomial method instead of Cholesky decomposition to calculate correlated random displacements during BD-HI simulations
 
-num_walls : number of walls to apply
+**fixman_tol** : tolerance on error estimate (Ek) used to determine convergence of the random displacements ; smaller values will require more steps to converge
 
-wall_file : file listing, for all atoms in the system, which of the walls they experience
+**fixman_order** : # of terms to include in the Chebyshev polynomial method
+
+**fixman_override?** : if “yes” then override the true minimum and maximum eigenvalues (which will otherwise be calculated by uiowa_bd) with the following estimates (**lmin** & **lmax**)
+
+---
+
+**treecode?** : if “yes” then use the Krasny group’s electrostatic treecode to recalculate all long-range electrostatic interactions at intervals of num_lst_stp steps
+
+**theta** : multiple acceptance criterion used to decide whether to use a multipole expansion in place of the exact calculation
+
+**order** : order of multipole expansion
+
+**shrink** : 1
+
+**maxatm** : max # of atoms to do something with
+
+---
+
+**walls?** : if “yes” then apply walls in one or more directions
+
+**num_walls** : number of walls to apply
+
+**wall_file** : file listing, for all atoms in the system, which of the walls they experience
 
 (for each of the num_walls walls read:
 )
