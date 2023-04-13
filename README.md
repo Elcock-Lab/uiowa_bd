@@ -340,37 +340,59 @@ Each of these functional forms has advantages and disadvantages. Fixed walls are
 ### position_restraint_file (fixed format):
 if i_do_position_restraints = “yes” then we need to provide a file that lists all of these restraints. There is one line for every restraint: if a bead is subject to no position restraints then there is no need to list it in the file; if a bead is subject to three different types of position restraint then three lines will be required to specify each of the restraints. Note also that if there are multiple copies of the same molecule type present in the system then you will need to provide separate lines for every copy (sorry about that but it is easily scripted).
 
-restraint type 1: To harmonically restrain a potential to a 1D line, a 2D plane, or a 3D point list the following:
+**restraint type 1**: To harmonically restrain a potential to a 1D line, a 2D plane, or a 3D point list the following:
+
 “1”,atom number, x-coord of restraint, y-coord of restraint, z-coord of restraint, force constant in x, force constant in y, force constant in z.
-Format: (a1,i8,3f20.5,3f15.5)
+
+Format: `(a1,i8,3f20.5,3f15.5)`
+
 To restrain an atom in 1D, e.g. along the y-axis, then set fy = 0 and fx and fz to non-zero values 
+
 To restrain an atom in 2D, e.g. in the y-z plane, then set fy = 0, fz = 0, and fx to a non-zero value
+
 To restrain an atom in 3D set fx, fy, fz to non-zero values.
 
-restraint type 2: To harmonically restrain an atom to a specified radial distance from a point specified in 3D space, list the following:
+**restraint type 2**: To harmonically restrain an atom to a specified radial distance from a point specified in 3D space, list the following:
+
 “2”,atom number, x-coord of restraint, y-coord of restraint, z-coord of restraint, desired radial distance, radial force constant.
-Format: (a1,i8,3f20.5,2f15.5)
 
-restraint type 3: To harmonically restrain an atom to a specified radial distance around the edge of a capsule whose long-axis is aligned with the z-axis, list the following:
+Format: `(a1,i8,3f20.5,2f15.5)`
+
+**restraint type 3**: To harmonically restrain an atom to a specified radial distance around the edge of a capsule whose long-axis is aligned with the z-axis, list the following:
+
 “3”,atom number, xyz coordinates for the center of the left-hand hemisphere, xyz coordinates for the center of the right-hand hemisphere, desired radial distance, radial force constant.
-Format: (a1,i8,6f20.5,2f15.5)
 
-restraint type 4: To restrain an atom so that it remains within a specified radial distance around the edge of a capsule whose long-axis is aligned with the z-axis, list the following:
+Format: `(a1,i8,6f20.5,2f15.5)`
+
+**restraint type 4**: To restrain an atom so that it remains within a specified radial distance around the edge of a capsule whose long-axis is aligned with the z-axis, list the following:
+
 “4”,atom number, xyz coordinates for the center of the left-hand hemisphere, xyz coordinates for the center of the right-hand hemisphere, desired radial restraint distance, radial force constant.
-Format: (a1,i8,6f20.5,2f15.5)
 
-restraint type 5: To restrain an atom so that it remains outside a specified radial distance around the edge of a capsule whose long-axis is aligned with the z-axis, list the following:
+Format: `(a1,i8,6f20.5,2f15.5)`
+
+**restraint type 5**: To restrain an atom so that it remains outside a specified radial distance around the edge of a capsule whose long-axis is aligned with the z-axis, list the following:
+
 “5”,atom number, xyz coordinates for the center of the left-hand hemisphere, xyz coordinates for the center of the right-hand hemisphere, desired radial restraint distance, radial force constant.
-Format: (a1,i8,6f20.5,2f15.5)
+
+Format: `(a1,i8,6f20.5,2f15.5)`
+
 ### wall file (free format):
 If num_walls > 0 then a wall_file needs to be provided. This file MUST contain one line for every type of unique atom in the system; each line identifies which of the walls in the system are “seen” by the bead in question. Consider an example system that contains two types of molecules. The first type of molecule contains 3 atoms; the second type of molecule contains 2 atoms. Both types of molecule can be present in many copies, but we only list their atoms once. Now let’s also imagine that there are four walls specified in the system, so num_walls = 4 (see above). The wall file therefore needs to contain 5 rows and 6 columns: 5 rows because there are 5 unique types of atom in the system (3 from molecule type 1 ; 2 from molecule type 2) and 6 columns because we need to specify: the molecule type, the atom number, and a 0 or 1 flag for each of the 4 walls.
-1  1  0  0  1  0 
-1  2  0  0  0  1
-1  3  0  0  1  1
-2  1  1  1  0  0
-2  2  0  0  0  0
+
+`1  1  0  0  1  0`
+
+`1  2  0  0  0  1`
+
+`1  3  0  0  1  1`
+
+`2  1  1  1  0  0`
+
+`2  2  0  0  0  0`
+
 In this example, atom #1 of molecule type #1 “sees” wall #3 ; atom #2 of molecule type #2 “sees” wall #4 ; atom #3 of molecule type #1 “sees” walls #3 and #4 ; atom #1 of molecule type #2 “sees” walls #1 and #2 ; atom #2 of molecule type #2 “sees” no walls and so is free to diffuse freely throughout the entire system. 
+
 ### go_parameter_file (fixed format):
+
 If i_use_go – “yes” then we will be reading the specified go_parameter_file. This is a fixed format file that specifies which atom types have favorable contacts with other atom types; atom types that form no such contacts do not need to be entered. Here is an example:
 1  1  0  0  1  0 
 1  2  0  0  0  1
