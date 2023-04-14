@@ -168,6 +168,7 @@ As is detailed in the section describing the input options, *uiowa_bd* offers a 
 With only one or two exceptions (see below) all of the inputs that are provided to the code are expected to be in fixed format. This means that you should *never* mess around with the alignment of columns in files, or skip lines etc. as I cannot vouch for the behavior that will result. In what follows I will use Fortran’s description of integer and float types to specify the format – e.g. `a3` means a word (string) of 3 characters, `f15.5` means a real number that has a total of 15 characters, 5 of which come after the decimal point; `i8` means an integer that has a total of 8 characters.
 
 ### Molecule-specific file formats: 1. charge.parameters file: ###
+
 The first few lines of a typical charge.parameters file might look like this:
 
 `ATOM      1  N   ASN     1       6.918 -15.726  -7.662 Q     0.769     5.300`
@@ -179,7 +180,10 @@ The first few lines of a typical charge.parameters file might look like this:
 This a .pdb-like **fixed-format** file. The only terms that matter are the atom name (which determines the nonbonded parameters assigned to the bead) and the two numbers after the "Q". The first of these numbers is the charge on the bead; the second is the hydrodynamic radius of the bead. The "Q" **must** be present for historical reasons. Note that coordinates are present in the file but can be set to zero if desired as they are not used. The formatting after the x,y,z coordinates is `1x,a1,2f10.3`
 
 ### Molecule-specific file formats: 2. internal.parameters file: ###
+
 This is a **fixed-format** file that contains three sections that describe, respectively, the bonds, angles, and dihedral angles present in the molecule. There are no blank lines between sections.
+
+---
 
 The first few lines of the bonds section of a typical internal.parameters file might look like this:
 
@@ -193,6 +197,8 @@ The "bond" line tells *uiowa_bd* how many lines of bonds need to be read, with e
 
 The next line lists five numbers. In order, these are: (1) the number of the molecule type, (2) the first bead in the bond, (3) the second bead in the bond, (4) the force constant of the bond (kcal/mol/A2), and (5) the equilibrium length of the bond. Note that the numbering of the bead is local to the molecule type, i.e. bead 1 means the first bead **in that molecule type**, not necessarily the first bead in the entire system.
 
+---
+
 The first few lines of the angles section might look like this:
 
 `angl         63 (expected number:       63)`
@@ -205,6 +211,17 @@ Again, the "angl" line tells *uiowa_bd* how many lines of angles need to be read
 
 The next line lists seven numbers but only the first six are read. In order, these are: (1) the number of the molecule type, (2) the first bead in the bond angle, (3) the second bead in the bond angle, (4) the third bead in the bond angle, (5) the force constant of the bond (kcal/mol/rad2), (6) the equilibrium agnle of the bond in radians, (7) the same but measured in degrees. The last of these numbers is not read so it can be omitted: I only put it in as a sanity check for myself because I have a hard time thinking in radians.
 
+---
+
+The first few lines of the dihedral angles section might look like this:
+
+`dihe         62 (expected number:       62)`
+
+`         1         1         2         3         4   0.50000   0.25000   3.79108  11.37325`
+
+`         1         2         3         4         5   0.50000   0.25000   2.75077   8.25231 `
+
+	 
 ### parameter file format:
 
 This contains one line per atom type present in the system. The atom type is dictated by the atom name provided in the charge.parameters files
