@@ -42,10 +42,10 @@ Most of the *uiowa_bd* code was written from the ground-up by AHE. However, cert
 
    Ermak DL, McCammon JA (1978) **Brownian dynamics with hydrodynamic interactions.** *J Chem Phys* **69**:1352.
    
-The second, invoked with the keyword `langevin` is the closely-related Langevin dynamics algorithm developed by Geyer & Winter:
+The second, invoked with the keyword `langevin` is the closely-related Langevin dynamics algorithm developed by Winter & Geyer:
 
    Winter U, Geyer T (2009) **Coarse grained simulations of a small peptide: Effects of finite damping and hydrodynamic interactions.** *J Chem Phys* **131**:104102.
-    
+
 5. the code that allows the late Prof Marshall Fixman’s Chebyshev polynomial-based method to be used to calculate correlated random displacements borrows very heavily from a corresponding C routine that was written by Tihamer Geyer when he was a faculty member at the University of Saarland and that was implemented in his BD code. If the Fixman code is used please consider citing:
 
    Geyer T (2011) **Many-particle Brownian and Langevin dynamics simulations with the Brownmove package.** *BMC Biophyics* **4**:7.
