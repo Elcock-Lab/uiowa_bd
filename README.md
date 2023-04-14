@@ -359,7 +359,7 @@ if "2" the coordinates are wrapped on a molecule-by-molecule basis: for the firs
   
 **HI_mode** : if “none” then no HI ; if “RPY” then use Rotne-Prager-Yamakawa HI ; if “OARPY” then use orientationally averaged RPY
 
-**scale_nb** : DEPRECATED NEED TO DELETE LOTS OF HSL STUFF
+**scale_nb** : DEPRECATED : just leave it set to a real number
 
 **BD/LD** : if “brownian” use Ermak-McCammon algorithm ; if “langevin” use Geyer & Winter’s Langevin dynamics algorithm
 
