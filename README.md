@@ -48,7 +48,7 @@ The second, invoked with the keyword `langevin` is the closely-related Langevin 
     
 5. the code that allows the late Prof Marshall Fixman’s Chebyshev polynomial-based method to be used to calculate correlated random displacements borrows very heavily from a corresponding C routine that was written by Tihamer Geyer when he was a faculty member at the University of Saarland and that was implemented in his BD code. If the Fixman code is used please consider citing:
 
-    Geyer T (2011) **Many-particle Brownian and Langevin dynamics simulations with the Brownmove package.** *BMC Biophyics* **4**:7
+    Geyer T (2011) **Many-particle Brownian and Langevin dynamics simulations with the Brownmove package.** *BMC Biophyics* **4**:7.
 
 6. while the current version of the code uses the Intel MKL routine `spotrf` to compute the Cholesky decomposition of the diffusion tensor, I want to acknowledge Dr Jonathan Hogg’s help in implementing an earlier openmp-parallelized routine for performing the same operation (HSL_MP54). It was Dr Hogg’s Cholesky decomposition code that enabled a number of our earlier studies with *uiowa_bd* to be completed.
 
@@ -433,7 +433,27 @@ note that total number of all copies of all molecule types must equal **f_mols**
 )
 
 ## Formats of optional files:
+
+---
+
+### go_parameter_file (fixed format):
+
+If i_use_go – “yes” then we will be reading the specified go_parameter_file. This is a fixed format file that specifies which atom types have favorable contacts with other atom types; atom types that form no such contacts do not need to be entered. Here is an example:
+
+`12-10 potentials`
+`         1         2         1        25        8.96124        1.00000`
+`         1         2         1        45       10.37536        0.80000`
+`         1        25         1         2        8.96124        1.00000`
+`         1        45         1         2       10.37356        0.80000`
+
+The title line "12-10 potentials" **must** be present. After that, there are six entries on each line. In order, these are: (1) the molecule type of the first bead in the Go-contact pair, (2) the molecule-local bead number of the first bead in the pair, (3) the molecule type of the second bead in the Go-contact pair, (4) the molecule-local bead number of the second bead in the pair, (5) the equilibrium distance between the two beads in the native state (in Angstroms), and (6) the energy well-depth (epsilon) for the interaction (in kcal/mol). In this example, bead #2 of molecule type #1 forms a favorable contact with bead #25 of the same molecule type. Note that the same bead can be involved in multiple contacts; note also that contacts can be defined between different molecule types. 
+
+Finally, and it pains me to have to write this, but you may have noticed one other unfortunate feature of the above file. This is that all contacts must be listed **twice** in the file: once as bead i with bead j, and once as bead j with bead i. This is for (gulp) historical reasons. I know, it's absolutely crazy, and I can't remember why I ever decided to write it in such a ridiculous way, but I did, and we're now stuck with it as I need to keep some kind of backward compatibility of files for my own sanity.
+
+---
+
 ### position_restraint_file (fixed format):
+
 if i_do_position_restraints = “yes” then we need to provide a file that lists all of these restraints. There is one line for every restraint: if a bead is subject to no position restraints then there is no need to list it in the file; if a bead is subject to three different types of position restraint then three lines will be required to specify each of the restraints. Note also that if there are multiple copies of the same molecule type present in the system then you will need to provide separate lines for every copy (sorry about that but it is easily scripted).
 
 **restraint type 1**: To harmonically restrain a potential to a 1D line, a 2D plane, or a 3D point list the following:
@@ -472,6 +492,8 @@ Format: `(a1,i8,6f20.5,2f15.5)`
 
 Format: `(a1,i8,6f20.5,2f15.5)`
 
+---
+
 ### wall file (free format):
 If num_walls > 0 then a wall_file needs to be provided. This file MUST contain one line for every type of unique atom in the system; each line identifies which of the walls in the system are “seen” by the bead in question. Consider an example system that contains two types of molecules. The first type of molecule contains 3 atoms; the second type of molecule contains 2 atoms. Both types of molecule can be present in many copies, but we only list their atoms once. Now let’s also imagine that there are four walls specified in the system, so num_walls = 4 (see above). The wall file therefore needs to contain 5 rows and 6 columns: 5 rows because there are 5 unique types of atom in the system (3 from molecule type 1 ; 2 from molecule type 2) and 6 columns because we need to specify: the molecule type, the atom number, and a 0 or 1 flag for each of the 4 walls.
 
@@ -487,15 +509,7 @@ If num_walls > 0 then a wall_file needs to be provided. This file MUST contain o
 
 In this example, atom #1 of molecule type #1 “sees” wall #3 ; atom #2 of molecule type #2 “sees” wall #4 ; atom #3 of molecule type #1 “sees” walls #3 and #4 ; atom #1 of molecule type #2 “sees” walls #1 and #2 ; atom #2 of molecule type #2 “sees” no walls and so is free to diffuse freely throughout the entire system. 
 
-### go_parameter_file (fixed format):
-
-If i_use_go – “yes” then we will be reading the specified go_parameter_file. This is a fixed format file that specifies which atom types have favorable contacts with other atom types; atom types that form no such contacts do not need to be entered. Here is an example:
-1  1  0  0  1  0 
-1  2  0  0  0  1
-1  3  0  0  1  1
-2  1  1  1  0  0
-2  2  0  0  0  0
-In this example, atom #1 of molecule type #1 “sees” wall #3 ; atom #2 of molecule type #2 “sees” wall #4 ; atom #3 of molecule type #1 “sees” walls #3 and #4 ; atom #1 of molecule type #2 “sees” walls #1 and #2 ; atom #2 of molecule type #2 “sees” no walls and so is free to diffuse freely throughout the entire system. 
+---
 
 
 
