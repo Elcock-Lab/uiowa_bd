@@ -170,11 +170,15 @@ With only one or two exceptions (see below) all of the inputs that are provided 
 ### Molecule-specific file formats: 1. charge.parameters file: ###
 The first few lines of a typical charge.parameters file might look like this:
 
-`ATOM      1  N   ASN     1       6.918 -15.726  -7.662 Q     0.769     5.300
-ATOM      2  CA  LEU     2       5.770 -12.399  -6.222 Q     0.000     5.300
-ATOM      3  CA  LYS     3       2.851 -10.884  -4.326 Q     0.957     5.300`
+`ATOM      1  N   ASN     1       6.918 -15.726  -7.662 Q     0.769     5.300`
+`ATOM      2  CA  LEU     2       5.770 -12.399  -6.222 Q     0.000     5.300`
+`ATOM      3  CA  LYS     3       2.851 -10.884  -4.326 Q     0.957     5.300`
 
-Molecule-specific file formats: 2. internal.parameters file
+This a .pdb-like **fixed-format** file. The only terms that matter are the atom name (which determines the nonbonded parameters assigned to the bead) and the two numbers after the "Q". The first of these numbers is the charge on the bead; the second is the hydrodynamic radius of the bead. The "Q" **must** be present for historical reasons. Note that coordinates are present in the file but can be set to zero if desired as they are not used. The formatting after the x,y,z coordinates is `1x,a1,2f10.3`
+
+### Molecule-specific file formats: 2. internal.parameters file: ###
+This file contains 
+
 
 ### parameter file format:
 
