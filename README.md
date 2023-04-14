@@ -44,7 +44,7 @@ Most of the *uiowa_bd* code was written from the ground-up by AHE. However, cert
    
 The second, invoked with the keyword `langevin` is the closely-related Langevin dynamics algorithm developed by Geyer & Winter:
 
-Geyer T, Winter (2011) **Coarse grained simulations of a small peptide: Effects of finite damping and hydrodynamic interactions.** *J Chem Phys* **131**:104102.
+    Geyer T, Winter (2011) **Coarse grained simulations of a small peptide: Effects of finite damping and hydrodynamic interactions.** *J Chem Phys* **131**:104102.
     
 5. the code that allows the late Prof Marshall Fixman’s Chebyshev polynomial-based method to be used to calculate correlated random displacements borrows very heavily from a corresponding C routine that was written by Tihamer Geyer when he was a faculty member at the University of Saarland and that was implemented in his BD code. If the Fixman code is used please consider citing:
 
