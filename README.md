@@ -94,6 +94,8 @@ The bulk of the *uiowa_bd* source code is all contained in the single folder `SO
 
 note that the first command compiles the mkl include file copied in stage 2.
 
+---
+
 **The resulting executable will be:**
 
 `uiowa_bd.exe`
