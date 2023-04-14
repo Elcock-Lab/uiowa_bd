@@ -219,7 +219,7 @@ The first few lines of the dihedral angles section might look like this:
 
 `         1         1         2         3         4   0.50000   0.25000   3.79108  11.37325`
 
-`         1         2         3         4         5   0.50000   0.25000   2.75077   8.25231 `
+`         1         2         3         4         5   0.50000   0.25000   2.75077   8.25231`
 
 	 
 ### parameter file format:
