@@ -242,6 +242,25 @@ The nonbonded energy model included in *uiowa_bd* is very simple: it consists on
 
 There are four entries on each line. The first is the atom name as it appears in the charge.parameters file. The next two entries are the conventional sigma and epsilon values associated with Lennard-Jones interactions: sigma is measured in Angstroms, epsilon in kcal/mol. The fourth entry is a flag that determines whether the full 12-10 interaction is to be used or not for that atom type. If the flag is zero then only the 1/r12 repulsive component is used; if the flag is greater than zero then both the 1/r12 repulsive and 1/r10 attractive components are used. The full 12-10 interaction is only calculated for pairs of atom types in which **both** atom types have the same value assigned to the flag. In the example shown above, therefore, CB-CB interactions would use the full 12-10 interaction (as would CC-CC interactions) but C-CB, CA-CB, and CC-CB interactions would all be treated as purely repulsive. Note that the combining rules for mixed interactions use the geometric means for both the epsilon and sigma values. For example, in the purely repulsive C-CA interaction, the effective sigma value would be 4.472A while the effective epsilon value would be 0.141 kcal/mol.  
 
+### (optional) go_parameter_file:
+
+If we wish to reward specific bead pairs when they come into contact (i.e. if we wish to use a Go model to describe one or more molecules), the we will be reading the specified go_parameter_file. This is a **fixed-format** file that specifies which atom types have favorable contacts with other atom types; atom types that form no such contacts do not need to be entered. **Note that there is only one go_parameter_file for the entire system**: many different molecule types can have their own lists of favorable Go contact terms, but they must all be compiled into a **single file**. Here is an example:
+
+`12-10 potentials`
+
+`         1         2         1        25        8.96124        1.00000`
+
+`         1         2         1        45       10.37536        0.80000`
+
+`         1        25         1         2        8.96124        1.00000`
+
+`         1        45         1         2       10.37356        0.80000`
+
+
+The title line "12-10 potentials" **must** be present. After that, there are six entries on each line. In order, these are: (1) the molecule type of the first bead in the Go-contact pair, (2) the molecule-local bead number of the first bead in the pair, (3) the molecule type of the second bead in the Go-contact pair, (4) the molecule-local bead number of the second bead in the pair, (5) the equilibrium distance between the two beads in the native state (in Angstroms), and (6) the energy well-depth (epsilon) for the interaction (in kcal/mol). In this example, bead #2 of molecule type #1 forms a favorable contact with bead #25 of the same molecule type. Note that the same bead can be involved in multiple contacts; note also that contacts can be defined between different molecule types. 
+
+Finally, and it pains me to have to write this, but you may have noticed one other unfortunate feature of the above file. This is that all contacts must be listed **twice** in the file: once as bead i with bead j, and once as bead j with bead i. This is for (gulp) historical reasons. I know, it's absolutely crazy, and I can't remember why I ever decided to write it in such a ridiculous way, but I did, and we're now stuck with it as I need to keep some kind of backward compatibility of files for my own sanity.
+
 ### uiowa_bd input file format:
 
 Input files for a number of example situations are provided in the EXAMPLES folder. In what follows, all of the parameters listed in these input files are grouped together by the line that they appear on in the input file
@@ -436,26 +455,6 @@ note that total number of all copies of all molecule types must equal **f_mols**
 
 ---
 
-### go_parameter_file (fixed format):
-
-If i_use_go – “yes” then we will be reading the specified go_parameter_file. This is a fixed format file that specifies which atom types have favorable contacts with other atom types; atom types that form no such contacts do not need to be entered. Here is an example:
-
-`12-10 potentials`
-
-`         1         2         1        25        8.96124        1.00000`
-
-`         1         2         1        45       10.37536        0.80000`
-
-`         1        25         1         2        8.96124        1.00000`
-
-`         1        45         1         2       10.37356        0.80000`
-
-
-The title line "12-10 potentials" **must** be present. After that, there are six entries on each line. In order, these are: (1) the molecule type of the first bead in the Go-contact pair, (2) the molecule-local bead number of the first bead in the pair, (3) the molecule type of the second bead in the Go-contact pair, (4) the molecule-local bead number of the second bead in the pair, (5) the equilibrium distance between the two beads in the native state (in Angstroms), and (6) the energy well-depth (epsilon) for the interaction (in kcal/mol). In this example, bead #2 of molecule type #1 forms a favorable contact with bead #25 of the same molecule type. Note that the same bead can be involved in multiple contacts; note also that contacts can be defined between different molecule types. 
-
-Finally, and it pains me to have to write this, but you may have noticed one other unfortunate feature of the above file. This is that all contacts must be listed **twice** in the file: once as bead i with bead j, and once as bead j with bead i. This is for (gulp) historical reasons. I know, it's absolutely crazy, and I can't remember why I ever decided to write it in such a ridiculous way, but I did, and we're now stuck with it as I need to keep some kind of backward compatibility of files for my own sanity.
-
----
 
 ### position_restraint_file (fixed format):
 
