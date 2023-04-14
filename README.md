@@ -221,7 +221,11 @@ The first few lines of the dihedral angles section might look like this:
 
 `         1         2         3         4         5   0.50000   0.25000   2.75077   8.25231`
 
-	 
+
+Again, the "dihe" line tells *uiowa_bd* how many lines of dihedral angles need to be read. 
+
+The next line lists nine numbers. In order, these are: (1) the number of the molecule type, (2) the first bead in the dihedral, (3) the second bead in the dihedral, (4) the third bead in the dihedral, (5) the fourth bead in the dihedral, (6) the half-height of the period=1 dihedral energy function, (7) the half-height of the period=3 dihedral energy function, (8) the energy-minimum of the period=1 dihedral function (in radians), and (9) 3 times the energy-minimum of the period=3 dihedral function (in radians).
+
 ### parameter file format:
 
 This contains one line per atom type present in the system. The atom type is dictated by the atom name provided in the charge.parameters files
