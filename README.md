@@ -441,10 +441,15 @@ note that total number of all copies of all molecule types must equal **f_mols**
 If i_use_go – “yes” then we will be reading the specified go_parameter_file. This is a fixed format file that specifies which atom types have favorable contacts with other atom types; atom types that form no such contacts do not need to be entered. Here is an example:
 
 `12-10 potentials`
+
 `         1         2         1        25        8.96124        1.00000`
+
 `         1         2         1        45       10.37536        0.80000`
+
 `         1        25         1         2        8.96124        1.00000`
+
 `         1        45         1         2       10.37356        0.80000`
+
 
 The title line "12-10 potentials" **must** be present. After that, there are six entries on each line. In order, these are: (1) the molecule type of the first bead in the Go-contact pair, (2) the molecule-local bead number of the first bead in the pair, (3) the molecule type of the second bead in the Go-contact pair, (4) the molecule-local bead number of the second bead in the pair, (5) the equilibrium distance between the two beads in the native state (in Angstroms), and (6) the energy well-depth (epsilon) for the interaction (in kcal/mol). In this example, bead #2 of molecule type #1 forms a favorable contact with bead #25 of the same molecule type. Note that the same bead can be involved in multiple contacts; note also that contacts can be defined between different molecule types. 
 
