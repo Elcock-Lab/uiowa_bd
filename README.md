@@ -8,11 +8,11 @@
 
 A number of example directories are provided with the source code that illustrate different uses of *uiowa_bd* and that provide good starting points for understanding the formatting of the various required input files. Further examples may be added in the next few days, but for now we have the following:
 
-1. `EXAMPLE_NATIVE_PROTEIN_DIFFUSION`
+1. `NATIVE_PROTEIN_DIFFUSION`
 
 This folder contains all files necessary to run a BD-HI simulation of the small protein Chymotrypsin Inhibitor 2 (CI2) modeled at the C-alpha-only level of resolution. The energetic model used to describe the protein is essentially a Go model: equilibrium bond, angle, and dihedral angles are set to the values found in the native state structure, and favorable Lennard-Jones 12-10 potential functions are added to all pairs of beads that form a contact in the native state structure. The protein is simulated starting in its native state, and HIs are modeled at the Rotne-Prager-Yamakawa level of theory with the result that both the translational and rotational diffusion of the protein is realistically simulated. 
 
-2. `EXAMPLE_PROTEIN_FOLDING`
+2. `PROTEIN_FOLDING`
 
 This folder contains all files necessary to run a BD-HI simulation of the small protein Cold-shock Protein B (CSPB) modeled at the C-alpha-only level of resolution. Again, the energetic model used here is that of a Go model, but in this case the initial configuration of the protein is an unfolded one and the BD-HI simulation continues until the protein folds back to its native state. Using the jargon from the protein folding field, we characterize the extent of folding of each configuration of the protein using the term "Q", which represents the fraction of native contacts that are successfully formed in the given configuration. The simulation is set up to quit when the protein reaches a value of Q = 0.90.
 
@@ -38,11 +38,11 @@ Most of the *uiowa_bd* code was written from the ground-up by AHE. However, cert
 
 4. *uiowa_bd* implements two position-update algorithms. The first, invoked with the keyword `brownian` (see below) is the Brownian dynamics algorithm developed by Ermak and McCammon:
 
-    Ermak DL, McCammon JA (1978)
+    Ermak DL, McCammon JA (1978) **Brownian dynamics with hydrodynamic interactios.** *J Chem Phys* **69**:1352.
    
 The second, invoked with the keyword `langevin` is the closely-related Langevin dynamics algorithm developed by Geyer & Winter:
 
-    Geyer T, Winter (2011)
+Geyer T, Winter (2011) **Coarse grained simulations of a small peptide: Effects of finite damping and hydrodynamic interactions.** *J Chem Phys* **131**:104102.
     
 5. the code that allows the late Prof Marshall Fixman’s Chebyshev polynomial-based method to be used to calculate correlated random displacements borrows very heavily from a corresponding C routine that was written by Tihamer Geyer when he was a faculty member at the University of Saarland and that was implemented in his BD code. If the Fixman code is used please consider citing:
 
