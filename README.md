@@ -4,7 +4,7 @@
 ## Overview
 *uiowa_bd* is a parallelized program that performs Brownian dynamics (BD) simulations of macromolecules. It uses simple molecular mechanics models of the kind widely used in other simulation codes to model the internal degrees of freedom of molecules, but also has the ability to include hydrodynamic interactions (HIs) between atoms (or more generally, beads), calculated at the Rotne-Prager-Yamakawa level of theory. This makes it useful for accurately simulating the translational and rotational diffusion of macromolecules, as well as their associations, in a fundamentally implicit solvent model. 
 
-## Examples
+## Example folders
 
 A number of example directories are provided with the source code that illustrate different uses of *uiowa_bd* and that provide good starting points for understanding the formatting of the various required input files. Further examples may be added in the next few days, but for now we have the following:
 
@@ -36,15 +36,23 @@ Most of the *uiowa_bd* code was written from the ground-up by AHE. However, cert
 
 3. code for writing trajectory coordinates to a compressed .xtc file came indirectly via GROMACS many years ago. A former member of my group, Dr Shun Zhu, figured out how to call that code from within *uiowa_bd*. He did this after having obtained code from two separate sources, both of whose URLs unfortunately appear now to be dead. One piece of the puzzle was the ego2xtc Fortran program which contained "writextc" and "readxtc" subroutines; that code was obtained via the following now-dead link: http://www.gromacs.org/Downloads/User_contributions/Other_software). The second piece of the puzzle was the xdrf library (written by Frans van Hoese as part of the EUROPORT project) which Shun obtained from the following now-dead link: http://hpcv100.rc.rug.nl/xdrfman.html. I cannot claim to understand how any of these routines work, but they clearly do what they are supposed to do when the final library file (`libxdrf.a`) is linked to *uiowa_bd*. Sorry, but I don't know how better to cite this part of the code. 
 
-4. the code that allows the late Prof Marshall Fixman’s Chebyshev polynomial-based method to be used to calculate correlated random displacements borrows very heavily from a corresponding C routine that was written by Tihamer Geyer when he was a faculty member at the University of Saarland and that was implemented in his BD code. If the Fixman code is used please consider citing:
+4. *uiowa_bd* implements two position-update algorithms. The first, invoked with the keyword `brownian` (see below) is the Brownian dynamics algorithm developed by Ermak and McCammon:
+
+    Ermak DL, McCammon JA (1978)
+   
+The second, invoked with the keyword `langevin` is the closely-related Langevin dynamics algorithm developed by Geyer & Winter:
+
+    Geyer T, Winter (2011)
+    
+5. the code that allows the late Prof Marshall Fixman’s Chebyshev polynomial-based method to be used to calculate correlated random displacements borrows very heavily from a corresponding C routine that was written by Tihamer Geyer when he was a faculty member at the University of Saarland and that was implemented in his BD code. If the Fixman code is used please consider citing:
 
     Geyer T (2011) **Many-particle Brownian and Langevin dynamics simulations with the Brownmove package.** *BMC Biophyics* **4**:7
 
-5. while the current version of the code uses the Intel MKL routine `spotrf` to compute the Cholesky decomposition of the diffusion tensor, I want to acknowledge Dr Jonathan Hogg’s help in implementing an earlier openmp-parallelized routine for performing the same operation (HSL_MP54). It was Dr Hogg’s Cholesky decomposition code that enabled a number of our earlier studies with *uiowa_bd* to be completed.
+6. while the current version of the code uses the Intel MKL routine `spotrf` to compute the Cholesky decomposition of the diffusion tensor, I want to acknowledge Dr Jonathan Hogg’s help in implementing an earlier openmp-parallelized routine for performing the same operation (HSL_MP54). It was Dr Hogg’s Cholesky decomposition code that enabled a number of our earlier studies with *uiowa_bd* to be completed.
 
     Hogg JD (2008) **A DAG-based parallel Cholesky Factorization for multicore systems.** Technical Report TR-RAL-2008-029
 
-6. code for writing trajectory coordinates to movie .pdb files was mostly written by Dr Tyson Shepherd while he was rotating in my group many years ago.
+7. code for writing trajectory coordinates to movie .pdb files was mostly written by Dr Tyson Shepherd while he was rotating in my group many years ago.
 
 
 ## Installation and compilation
@@ -146,11 +154,11 @@ In typical usage, when I wish to watch a movie of a simulation (usually to make 
 ## Using *uiowa_bd*: some idiosyncracies, features, and workarounds
 
 ### How periodic boundary conditions work (or don't) in *uiowa_bd*
-I'm sorry to say that the implementation of periodic boundary conditions in *uiowa_bd* is complicated. First of all, let's be clear about what will happen without periodic boundary conditions (i_pbc=0). If molecules are unconstrained by walls, positions restraints, or capsule restraints, then there is the possibility that, given enough time, they will diffuse outside of the limits specified by xmin, xmax, ymin, ymax, zmin, zmax. If that happens then the simulation will definitely crash the next time that the nonbonded list is updated. You *could* decide to make the box very large to avoid this happening, but bear in mind that the grid used to determine all nonbonded neighbors will also become quite large and zeroing it out at the beginning of each nonbonded update might then become expensive (here is a good example of non-optimal programming in *uiowa_bd*).
+I am sorry to say that the implementation of periodic boundary conditions in *uiowa_bd* is complicated. First of all, let's be clear about what might happen when a simulation is run without periodic boundary conditions (i_pbc=0; see below). If molecules are unconstrained by walls, positions restraints, or capsule restraints, then there is the possibility that, given enough simulation time, they will diffuse outside of the box limits specified by xmin, xmax, ymin, ymax, zmin, zmax (see below). If that happens then the simulation will definitely crash the next time that the list of nonbonded bead pairs is updated. You *could* decide to make the box very large to try to avoid this happening, but bear in mind that the grid used to determine all nonbonded neighbors will also become quite large and zeroing it out at the beginning of each nonbonded update might then become expensive (this is a good example of non-optimal programming in *uiowa_bd*; see above).
 
-An alternative is to use periodic boundary conditions (i_pbc=1). In understanding how these are implemented in *uiowa_bd*, it's important to note the following. Internally, *uiowa_bd* keeps track of the "true" coordinates of molecules, making it possible to easily calculate translational diffusion coefficients from trajectories; externally, i.e. how the coordinates appear in .pdb and .xtc files is controlled by the **wrap_molecules** flag (see above).First of all, let's deal with the no-HI case. For BD simulations without HI, periodic boundary conditions work fine. 
+An alternative is to use periodic boundary conditions (i_pbc=1). In understanding how these are implemented in *uiowa_bd*, it's important to note the following. **Internally**, *uiowa_bd* keeps track of the "true" coordinates of beads, i.e. the coordinates that properly describe the diffusive trajectory that beads make away from the initial coordinates passed to the program. Keeping these "true" coordinates makes it possible to easily calculate translational diffusion coefficients from trajectories later. **Externally** (by which we mean how the coordinates appear in .pdb and .xtc files), the behavior is controlled by the **wrap_molecules** flag (see below): users have the option to write out the true coordinates, or coordinates of the periodic image that lies within the central simulation box. 
 
-For simulations with HIs, the situation is more complicated. Once upon a time I had programmed in the Ewald summation of the RPY diffusion tensor that was derived by Beenakker in 1986. That code never ended up in a publication, even though it worked, and since I didn't have immediate use for it, I eventually stopped maintaining it. So now the treatment of HIs in periodic boundary condition simulations is complicated. For BD-HI simulations that include only a single molecule, periodic boundary conditions can be used as long as the box is large enough that we never have some atoms whose closest neighbors are in one box, and other atoms whose closet neighbors are in another box. If that happens, then the RPY diffusion tensor will for sure end up non-positive definite and it will kill the simulation. If, however, the box is large enough so that all atoms of the molecule interaction within the original version of the molecule then the RPY diffusion tensor will remain positive definite. 
+With that preamble in mind, let's first deal with how periodic boundary conditions are treated in simulations that do not include HIs. For BD simulations without HI, periodic boundary conditions work fine: the "true" coordinates of beads can continue to diffuse away from the central box but all nonbonded interactions are determined using the minimum image convention. For simulations with HIs, the situation is more complicated. Once upon a time I had programmed in the Ewald summation of the RPY diffusion tensor that was derived by Beenakker in 1986. That code never ended up in a publication, even though it worked, and since I didn't have immediate use for it, I eventually stopped maintaining it. So now the treatment of HIs in periodic boundary condition simulations is complicated. For BD-HI simulations that include only a single molecule, periodic boundary conditions can be used as long as the box is large enough that we never have some atoms whose closest neighbors are in one box, and other atoms whose closet neighbors are in another box. If that happens, then the RPY diffusion tensor will for sure end up non-positive definite and it will kill the simulation. If, however, the box is large enough so that all atoms of the molecule interaction within the original version of the molecule then the RPY diffusion tensor will remain positive definite. 
  
 ### Walls, position restraints, and confinement potentials
 As is detailed in the section describing the input options, *uiowa_bd* offers a variety of different restraint potentials that can be used to restrict the movement of beads of interest. Each of these functional forms has advantages and disadvantages. Fixed walls allowed by the code can be used to restricted selected subsets of beads to different spatial locations, and could in principle be used to determine osmotic pressures (the code did this at one time but that never reached publication). Fixed position restraints allowed by the code can cover a wide range of different scenarios: beads can be restricted to 1D, 2D or 3D positions, and can be restricted to a variety of locations relative to a capsule whose shape can be either a sphere or a bacterial-cell shape. Specifically, beads can be restricted to the surface of the capsule, the inside of a capsule or the outside of a capsule; the latter two potentials can also be combined to restrict beads to a shell of any desired thickness. Finally, *moveable* confinement potentials are also allowed by the code: while these are more functionally limited in the sense that all they do is restrict beads to remain within a sphere or a capsule, they have the advantage that they allow the radius of the sphere or capsule to vary during a simulation. This can, for example, be used to progressively shrink a large molecule so that it fits within a cell-like volume, or could be used to confine a viral genome within a sphere commensurate with its capsid.
@@ -248,11 +256,11 @@ if mol_Q1 <> mol_Q2 then we are monitoring the formation of intermolecular conta
 
 **no_elec?** : if “yes” then skip electrostatic calculations entirely
 
-**wrap_molecules** : controls behavior of molecules’ coordinates as written to .xtc file
+**wrap_molecules** : controls behavior of molecules’ coordinates as written to .pdb and .xtc files when periodic boundary conditions are used
 
-	if “0” then do this
-	if “1” then do this
-	if “2” then do this
+if “0” then coordinates are not wrapped - i.e. the "true" coordinates are written
+if "1" then coordinates are wrapped on an atom-by-atom basis: for each atom, the coordinates written are those of the periodic image that lies within the box
+if "2" the coordinates are wrapped on a molecule-by-molecule basis: for the first atom in each molecule, the coordinates written are again those of the periodic image that lies within the box ; for all other atoms in the molecule the coordinates written are those of the periodic image that is closest to that written for the first atom. In other words, this option endeavors to keep all molecules "whole" even as they might appear to jump from one side of the box to the other during the course of the simulation trajectory.
   
 **HI_mode** : if “none” then no HI ; if “RPY” then use Rotne-Prager-Yamakawa HI ; if “OARPY” then use orientationally averaged RPY
 
@@ -292,17 +300,17 @@ note that total number of all copies of all molecule types must equal **f_mols**
 
 **vdw_s** (A) : short-range Lennard-Jones cutoff – interactions recalculated every step
 
-**vdw_m** (A) : medium-range Lennard-Jones cutoff – interactions with distance > vdw_s but < vdw_m are recalculated every num_fmd_stp timesteps
+**vdw_m** (A) : medium-range Lennard-Jones cutoff – interactions with distance > vdw_s but < vdw_m are recalculated every num_fmd_stp steps and kept constant for all intervening steps
 
 **goe_s** (A) : short-range cutoff for Go contact pairs – interactions recalculated every step
 
-**goe_m** (A) : medium-range cutoff for Go contact pairs – interactions with distance > goe_s but < goe_m are recalculated every num_fmd_stp timesteps
+**goe_m** (A) : medium-range cutoff for Go contact pairs – interactions with distance > goe_s but < goe_m are recalculated every num_fmd_stp steps and kept constant for all intervening steps
 
 **ele_s** (A) : short-range electrostatic cutoff – interactions recalculated every step
 
-**ele_m** (A) : medium-range electrostatic cutoff – interactions with distance > ele_s but < ele_m are recalculated every num_fmd_stp timesteps
+**ele_m** (A) : medium-range electrostatic cutoff – interactions with distance > ele_s but < ele_m are recalculated every num_fmd_stp steps and kept constant for all intervening steps
 
-**f_f_cell_size** (A) : size of cell used to accelerate construction of nonbonded pair list ; atom/bead pairs in all neighboring cells are examined for possible interactions – f_f_cell_size must be equal to or greater than the largest of the six cutoffs identified above.
+**f_f_cell_size** (A) : size of cell used to accelerate construction of nonbonded pair list ; atom/bead pairs in all neighboring cells are examined for possible interactions – f_f_cell_size must be equal to or greater than the largest of the six cutoffs identified above *and* the box length in each of the x, y, and z dimensions should be an integer (>2) multiple of f_f_cell_size. For example, if xmin is -100A and xmax is 100A, such that the box length in x is 200 A, then possible values of f_f_cell_size would be 50A, 40A, 25A, but not 100A.
 
 ---
 
