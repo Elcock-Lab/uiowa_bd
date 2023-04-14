@@ -44,7 +44,7 @@ Most of the *uiowa_bd* code was written from the ground-up by AHE. However, cert
    
 The second, invoked with the keyword `langevin` is the closely-related Langevin dynamics algorithm developed by Geyer & Winter:
 
-   Geyer T, Winter (2011) **Coarse grained simulations of a small peptide: Effects of finite damping and hydrodynamic interactions.** *J Chem Phys* **131**:104102.
+   Winter U, Geyer T (2009) **Coarse grained simulations of a small peptide: Effects of finite damping and hydrodynamic interactions.** *J Chem Phys* **131**:104102.
     
 5. the code that allows the late Prof Marshall Fixman’s Chebyshev polynomial-based method to be used to calculate correlated random displacements borrows very heavily from a corresponding C routine that was written by Tihamer Geyer when he was a faculty member at the University of Saarland and that was implemented in his BD code. If the Fixman code is used please consider citing:
 
@@ -79,7 +79,7 @@ The bulk of the *uiowa_bd* source code is all contained in the single folder `SO
 
 1. if it doesn’t already exist, then make a library file (`libxdrf.a`) that allows *uiowa_bd* to handle .xtc files:
 
-`cd XTC_IFORT ; make clean ; make ; cp libxdrf.a ../ ; cd ../`
+`cd XTC ; make clean ; make ; cp libxdrf.a ../ ; cd ../`
 
 2. if it doesn’t already exist, then copy the appropriate include file for MKL so that uiowa_bd can use it for random numbers:
 
@@ -155,7 +155,7 @@ In typical usage, when I wish to watch a movie of a simulation (usually to make 
 
 ## Using *uiowa_bd*: Known issues, idiosyncracies, features, and workarounds
 
-### Don't trust the dihedral energy that is written to the log file
+### Don't trust the dihedral energy that is written to the log file just yet
 This will hopefully be fixed very soon. As far as I can tell, the sampling around dihedral angles is correct (so the dihedral forces are correct) but there is a bug somewhere in the period=3 dihedral energy that I haven't yet figured out. If you only use period=1 dihedrals (i.e. if you set the half-height of the potential for the period=3 dihedral function to zero) then the dihedral energy is correct. 
 
 ### How periodic boundary conditions work (or don't) in *uiowa_bd*
