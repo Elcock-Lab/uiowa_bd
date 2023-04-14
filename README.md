@@ -5,17 +5,17 @@
 *uiowa_bd* is a parallelized program that performs Brownian dynamics (BD) simulations of macromolecules. It uses simple molecular mechanics models of the kind widely used in other simulation codes to model the internal degrees of freedom of molecules, but also has the ability to include hydrodynamic interactions (HIs) between atoms or beads, calculated at the Rotne-Prager-Yamakawa level of theory. This makes it useful for accurately simulating the translational and rotational diffusion of macromolecules, as well as their associations, in a fundamentally implicit solvent model. A number of example directories are provided with the source code that illustrate different uses of *uiowa_bd*.
 
 
-## Referencing uiowa_bd
+## Referencing *uiowa_bd*
 The following lists the principal papers that have been marked the development of *uiowa_bd*. If you have to cite only one publication then it makes sense for this to be the most recent (Tworek & Elcock, 2023) since this paper coincides with the release of this version of the code. However, depending on what features of the code you use, you may need to cite additional publications (see treecode and fixman entries below).
 
-Tworek JW, Elcock AH. **An orientationally averaged version of the Rotne-Prager-Yamakawa tensor provides a fast but still accurate treatment of hydrodynamic interactions in Brownian dynamics simulations of biological macromolecules.** (preprint). *bioRxiv.* 2023
+1. Tworek JW, Elcock AH. **An orientationally averaged version of the Rotne-Prager-Yamakawa tensor provides a fast but still accurate treatment of hydrodynamic interactions in Brownian dynamics simulations of biological macromolecules.** (preprint). *bioRxiv.* 2023
 
-Frembgen-Kesner T, Elcock AH. (2009) **Striking effects of hydrodynamic interactions on the simulated diffusion and folding of proteins.** *J Chem Theory Comput* **5**:242-256
+2. Frembgen-Kesner T, Elcock AH. (2009) **Striking effects of hydrodynamic interactions on the simulated diffusion and folding of proteins.** *J Chem Theory Comput* **5**:242-256
 
-Elcock AH. (2006) **Molecular simulations of cotranslational protein folding: fragment stabilities, folding cooperativity, and trapping in the ribosome.** *PLoS Comput Biol* **2**:e98
+3. Elcock AH. (2006) **Molecular simulations of cotranslational protein folding: fragment stabilities, folding cooperativity, and trapping in the ribosome.** *PLoS Comput Biol* **2**:e98
 
 ## External References and Contributions Made by Others
-Most of the code was written from the ground-up by AHE. However, certain key parts of the code were taken from other sources. These include:
+Most of the code was written from the ground-up by AHE. However, certain key parts of the code were taken from other sources, and unfortunately most of those parts were incorporated so long ago that I am a bit hazy about their exact origins. I have done my best in what follows to properly attribute credit to others. Parts of the code that originate elsewhere include:
 
 1. code for handling bond angle and dihedral angle calculations was, if I remember correctly, adapted from code that I found online *many* years ago written by Prof. Jay Ponder (Department of Chemistry, Washington University, St. Louis, MO) and which probably formed part of his TINKER simulation package. For much more up-to-date versions of TINKER, please see Prof. Ponder's website: https://dasher.wustl.edu/tinker/
 
@@ -36,9 +36,8 @@ Most of the code was written from the ground-up by AHE. However, certain key par
 6. code for writing trajectory coordinates to movie .pdb files was partly written by Dr Tyson Shepherd while he was rotating in my group many years ago.
 
 
-
 ## Installation and compilation
-The bulk of the source code is all contained in the single folder `SOURCE`; additional code that handles the reading and writing of .xtc trajectory files (and that I didn’t write!) is in the sub-folder `XTC`. A makefile is provided that “gets the job done”, but I don’t claim that this makefile is well-written: I barely understand how makefiles work, and I stopped refining the one provided as soon as it looked like it worked. All of the code is written in Fortran. I assume that the user will compile the code with Intel’s Fortran compiler (ifort) and with Intel’s Math Kernel Library (MKL) installed. The code can probably be adapted to compile with gfortran relatively easily, but care will be needed with routines that are currently handled by MKL: these include the calculation of random numbers, the spotrf routine that is used to compute the Cholesky decomposition of the diffusion tensor, and possibly some others. I am sorry to say that if you attempt to get the code working with any compiler other than ifort you will be on your own. 
+The bulk of the *uiowa_bd* source code is all contained in the single folder `SOURCE`; additional code that handles the reading and writing of .xtc trajectory files (and that I didn’t write!) is in the sub-folder `XTC`. A makefile is provided that “gets the job done”, but I don’t claim that this makefile is well-written: I barely understand how makefiles work, and I stopped refining the one provided as soon as it looked like it worked. All of the code is written in Fortran. I assume that the user will compile the code with Intel’s Fortran compiler (ifort) and with Intel’s Math Kernel Library (MKL) installed. The code can probably be adapted to compile with gfortran relatively easily, but care will be needed with routines that are currently handled by MKL: these include the calculation of random numbers, the spotrf routine that is used to compute the Cholesky decomposition of the diffusion tensor, and possibly some others. I am sorry to say that if you attempt to get the code working with any compiler other than ifort you will be on your own. 
 
 **Before compiling you will need to do the following:**
 
@@ -71,13 +70,13 @@ The bulk of the source code is all contained in the single folder `SOURCE`; addi
 
 note that the first command compiles the mkl include file copied in stage 2.
 
-**The resulting executable is:**
+**The resulting executable will be:**
 
 `uiowa_bd.exe`
 
 ### Comments on the development of *uiowa_bd*
 The *uiowa_bd* source code has been written over a number of years and there have been many cases where features (e.g. replica exchange) have been added to the code and then deprecated before ever appearing in publication form. I have done my best to remove “dead” code but there is still likely to be some remaining. The present version represents a near-final version that, while definitely useful for production level simulations now, is unlikely to be a focus for further serious development in my group. This is for the following reasons. First, while the uiowa_bd code is effective for small- to medium-sized systems it is not well suited to simulating very large-scale systems that are starting to become of interest to my lab. Second, some of the decisions about code-structure that were made early in the code’s development would not be made today: the code is far more complicated than it needs to be in places, and this hampers efforts to build in fundamentally new approaches. Third, while the code typically achieves nice speedups using openmp, its raw (single-core) speed is not what it could be: a good chunk of this is likely attributable to the non-optimal way in which much of the data is stored in memory and accessed during calculations. Fourth, the existing code is entirely unaware of the possibility of using GPUs for compute-intensive calculations, which makes it seem something of a dinosaur now. While all of the above issues are, in principle, quite fixable, the underlying code-structure of uiowa_bd is sufficiently byzantine that a better approach is likely to be starting from scratch with an entirely new code.
-### A note on the coding style
+### A brief note on the coding style in *uiowa_bd*
 While the *uiowa_b*d code makes use of a number of Fortran90 constructs (especially allocatable arrays plus the odd pointer and derived type here and there), it is written in the style of Fortran77. This is why all of the source file extensions are “.f” and not “.f90”. A professional programmer would almost certainly laugh at the way *uiowa_bd* is written. While some readers of this might be tempted to undertake reformatting and rewriting of the code to make it fully Fortran90-compliant, I don’t recommend this given that the code is unlikely to undergo any further serious development by me (see above).
 
 
@@ -93,9 +92,9 @@ As with all simulation codes, a significant amount of time and effort will be sp
 `tail -f uiowa_bd.out`
 
 
-**Line 1** makes two sub-folders into which .pdb and restart.files will be written.
+**Line 1** makes two sub-folders into which .pdb and restart.files will be written - if these folders do not exist at run-time then the code will basically hang, continually stating that it is trying to write a .pdb file.
 
-**Line 2** copies a restart.file into the hardwired filename that uiowa_bd expects and that contains the initial coordinates of all atoms/beads in the system – trust me on this: this file must be called restart.file.001
+**Line 2** copies a restart.file into the hardwired filename that uiowa_bd expects and that contains the initial coordinates of all atoms/beads in the system – trust me on this: this file **must** be called restart.file.001
 
 **Line 3** runs the code: the first argument is a random seed. To obtain different replicate simulations of the same system just change this number (I typically use numbers like 1234, 2345 etc). While two otherwise identical runs that use the same random seed should, in principle, produce identical output, in practice, this is only likely to occur when running with a single openmp thread: when more than one thread is used, slight numerical differences will accumulate and cause the trajectories to begin to diverge.
 
@@ -103,7 +102,7 @@ As with all simulation codes, a significant amount of time and effort will be sp
 
 ## Using *uiowa_bd*: summary of input
 
-All input files and their required formats are described in detail later, but at the most basic level, the following files are required as inputs to *uiowa_bd*:
+All input files and their required formats are described in detail later; a good way to get a "feel" for these inputs is to look in the various EXAMPLE folders that are provided. At the most basic level, the following files are required as inputs to *uiowa_bd*:
 
 1. An **input file** (e.g. uiowa_bd.inp) that lists all of the details of the system to be simulated. Conceptually, this file combines features that are found in GROMACS’ grompp.mdp and topol.top files, but it uses a very different format.
 
