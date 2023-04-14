@@ -1,0 +1,63 @@
+
+-----------------------------------------------
+this is a release version of the uiowa_bd code:
+-----------------------------------------------
+
+need to delete the following:
+
+(1) mission_creep
+(2) afm
+(3) HSL stuff
+(4) also edit shrink_box to remove the box shrinking bit?
+    I guess that could be useful for PBC stuff?
+
+(on GDZ) this is a direct copy of:
+----------------------------------
+
+cp -r UIOWA_BD_2022_FOR_RELEASE_CULLED_SPOTRF .
+
+(on GDZ) copied the xtc code from here:
+---------------------------------------
+
+cp -r /home/aelcock/CURRENT_CODES/XTC_LIBRARY_FILE_SOURCE/XTC_IFORT/ .
+
+you will need some environment variables set:
+---------------------------------------------
+
+need to add ifort to PATH
+need to add ifort libraries to LD_LIBRARY_PATH
+need to define MKLROOT
+
+e.g. .bashrc may look like:
+
+export PATH=$PATH:/opt/intel/compilers_and_libraries_2016.2.181/linux/bin/intel64
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/intel/compilers_and_libraries_2016.2.181/linux/compiler/lib/intel64
+export MKLROOT=/opt/intel/compilers_and_libraries_2016.2.181/linux/mkl
+
+------------------------------------------
+should be able to compile everything thus:
+------------------------------------------
+
+(1) make a library file that allows us to handle .xtc files:
+------------------------------------------------------------
+
+cd XTC_IFORT
+make clean
+make
+
+cp libxdrf.a ../
+cd ../
+
+(2) (if necessary) copy the appropriate mkl file for using random numbers:
+--------------------------------------------------------------------------
+
+cp ${MKLROOT}/include/mkl_vsl.f90 .
+
+(3) compile modules and then make uiowa_bd (may take a few minutes):
+--------------------------------------------------------------------
+
+ifort -c mkl_vsl.f90
+ifort -c uiowa_bd.modules.f
+make uiowa_bd
+
+
