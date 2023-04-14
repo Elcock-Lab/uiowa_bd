@@ -228,7 +228,7 @@ The next line lists nine numbers. In order, these are: (1) the number of the mol
 
 ### parameter file format:
 
-This contains one line per atom type present in the system. The atom type is dictated by the atom name provided in the charge.parameters files. The first few lines of a typical parameter.file might look like:
+The nonbonded energy model included in *uiowa_bd* is very simple: it consists only of: (1) a Lennard-Jones (LJ) 12-10 interaction (where the 1/r12 term is repulsive, and the 1/r10 term - which can be zero'd out - see below - is attractive), and (2) a Debye-Huckel model of ion-screened electrostatic interactions. Parameter values for the LJ interactions are determined by the parameter.file. It contains one line per atom type present in the system. The atom type is dictated by the atom name provided in the charge.parameters files. The first few lines of a typical parameter.file might look like:
 
 `C   4.00  0.10 0`
 
@@ -238,7 +238,7 @@ This contains one line per atom type present in the system. The atom type is dic
 
 `CC  4.00  0.20 2`
 
-There are four entries on each line. The first is the atom name as it appears in the charge.parameters file. The next two entries are the conventional sigma and epsilon values associated with Lennard-Jones interactions: sigma is measured in Angstroms, epsilon in kcal/mol. The fourth entry is a flag that determines whether the full 12-10 interaction is to be used or not for that atom type. If the flag is zero then only the 1/r12 repulsive component is used; if the flag is greater than zero then both the 1/r12 repulsive and 1/r10 attractive components are used. The full 12-10 interaction is only calculated for pairs of atom types where **both** atom types have the same value assigned to the flag. In the example shown above, therefore, CB-CB interactions would use the full 12-10 interaction, but C-CB, CA-CB, and CC-CB interactions would be treated as purely repulsive. Note that the combining rules for mixed interactions use the geometric means for both the epsilon and sigma values. For example, in the purely repulsive C-CA interaction, the effective sigma value would be 4.472A while the effective epsilon value would be 0.141 kcal/mol.  
+There are four entries on each line. The first is the atom name as it appears in the charge.parameters file. The next two entries are the conventional sigma and epsilon values associated with Lennard-Jones interactions: sigma is measured in Angstroms, epsilon in kcal/mol. The fourth entry is a flag that determines whether the full 12-10 interaction is to be used or not for that atom type. If the flag is zero then only the 1/r12 repulsive component is used; if the flag is greater than zero then both the 1/r12 repulsive and 1/r10 attractive components are used. The full 12-10 interaction is only calculated for pairs of atom types in which **both** atom types have the same value assigned to the flag. In the example shown above, therefore, CB-CB interactions would use the full 12-10 interaction (as would CC-CC interactions) but C-CB, CA-CB, and CC-CB interactions would all be treated as purely repulsive. Note that the combining rules for mixed interactions use the geometric means for both the epsilon and sigma values. For example, in the purely repulsive C-CA interaction, the effective sigma value would be 4.472A while the effective epsilon value would be 0.141 kcal/mol.  
 
 ### uiowa_bd input file format:
 
