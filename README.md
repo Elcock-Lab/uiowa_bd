@@ -34,25 +34,25 @@ Most of the *uiowa_bd* code was written from the ground-up by AHE. However, cert
 
 2. the treecode routine that is used for calculating long-range (Debye-Hückel) electrostatic interactions comes from the group of Prof. Robert Krasny (University of Michigan). One of the primary authors of that code – Hans Johnston – was extremely generous with his time in helping me adapt the code for use in *uiowa_bd*. If the treecode routine is used please cite:
 
-    Li P, Johnston H, Krasny R (2009) **A Cartesian treecode for screened coulomb interactions.** *J Comput Phys* **228**:3858-3868  
+   Li P, Johnston H, Krasny R (2009) **A Cartesian treecode for screened coulomb interactions.** *J Comput Phys* **228**:3858-3868  
 
 3. code for writing trajectory coordinates to a compressed .xtc file came indirectly via GROMACS many years ago. A former member of my group, Dr Shun Zhu, figured out how to call that code from within *uiowa_bd*. He did this after having obtained code from two separate sources, both of whose URLs unfortunately appear now to be dead. One piece of the puzzle was the ego2xtc Fortran program which contained "writextc" and "readxtc" subroutines; that code was obtained via the following now-dead link: http://www.gromacs.org/Downloads/User_contributions/Other_software). The second piece of the puzzle was the xdrf library (written by Frans van Hoese as part of the EUROPORT project) which Shun obtained from the following now-dead link: http://hpcv100.rc.rug.nl/xdrfman.html. I cannot claim to understand how any of these routines work, but they clearly do what they are supposed to do when the final library file (`libxdrf.a`) is linked to *uiowa_bd*. Sorry, but I don't know how better to cite this part of the code. 
 
 4. *uiowa_bd* implements two position-update algorithms. The first, invoked with the keyword `brownian` (see below) is the Brownian dynamics algorithm developed by Ermak and McCammon:
 
-    Ermak DL, McCammon JA (1978) **Brownian dynamics with hydrodynamic interactios.** *J Chem Phys* **69**:1352.
+   Ermak DL, McCammon JA (1978) **Brownian dynamics with hydrodynamic interactions.** *J Chem Phys* **69**:1352.
    
 The second, invoked with the keyword `langevin` is the closely-related Langevin dynamics algorithm developed by Geyer & Winter:
 
-    Geyer T, Winter (2011) **Coarse grained simulations of a small peptide: Effects of finite damping and hydrodynamic interactions.** *J Chem Phys* **131**:104102.
+   Geyer T, Winter (2011) **Coarse grained simulations of a small peptide: Effects of finite damping and hydrodynamic interactions.** *J Chem Phys* **131**:104102.
     
 5. the code that allows the late Prof Marshall Fixman’s Chebyshev polynomial-based method to be used to calculate correlated random displacements borrows very heavily from a corresponding C routine that was written by Tihamer Geyer when he was a faculty member at the University of Saarland and that was implemented in his BD code. If the Fixman code is used please consider citing:
 
-    Geyer T (2011) **Many-particle Brownian and Langevin dynamics simulations with the Brownmove package.** *BMC Biophyics* **4**:7.
+   Geyer T (2011) **Many-particle Brownian and Langevin dynamics simulations with the Brownmove package.** *BMC Biophyics* **4**:7.
 
 6. while the current version of the code uses the Intel MKL routine `spotrf` to compute the Cholesky decomposition of the diffusion tensor, I want to acknowledge Dr Jonathan Hogg’s help in implementing an earlier openmp-parallelized routine for performing the same operation (HSL_MP54). It was Dr Hogg’s Cholesky decomposition code that enabled a number of our earlier studies with *uiowa_bd* to be completed.
 
-    Hogg JD (2008) **A DAG-based parallel Cholesky Factorization for multicore systems.** Technical Report TR-RAL-2008-029
+   Hogg JD (2008) **A DAG-based parallel Cholesky Factorization for multicore systems.** Technical Report TR-RAL-2008-029
 
 7. code for writing trajectory coordinates to movie .pdb files was mostly written by Dr Tyson Shepherd while he was rotating in my group many years ago.
 
