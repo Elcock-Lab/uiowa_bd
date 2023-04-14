@@ -1,0 +1,6 @@
+
+compile the libxdrf.a file thus:
+
+make clean
+make
+
