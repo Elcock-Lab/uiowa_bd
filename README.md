@@ -167,6 +167,7 @@ As is detailed in the section describing the input options, *uiowa_bd* offers a 
 
 
 ## Overview of file formats
+
 With only one or two exceptions (see below) all of the inputs that are provided to the code are expected to be in fixed format. This means that you should *never* mess around with the alignment of columns in files, or skip lines etc. as I cannot vouch for the behavior that will result. In what follows I will use Fortran’s description of integer and float types to specify the format – e.g. `a3` means a word (string) of 3 characters, `f15.5` means a real number that has a total of 15 characters, 5 of which come after the decimal point; `i8` means an integer that has a total of 8 characters.
 
 ### Molecule-specific file formats: 1. charge.parameters file format: ###
