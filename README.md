@@ -42,7 +42,7 @@ Most of the *uiowa_bd* code was written from the ground-up by AHE. However, cert
 
    Ermak DL, McCammon JA (1978) **Brownian dynamics with hydrodynamic interactions.** *J Chem Phys* **69**:1352.
    
-The second, invoked with the keyword `langevin` is the closely-related Langevin dynamics algorithm developed by Winter & Geyer:
+   The second, invoked with the keyword `langevin` is the closely-related Langevin dynamics algorithm developed by Winter & Geyer:
 
    Winter U, Geyer T (2009) **Coarse grained simulations of a small peptide: Effects of finite damping and hydrodynamic interactions.** *J Chem Phys* **131**:104102.
 
