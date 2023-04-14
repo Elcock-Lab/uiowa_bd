@@ -179,7 +179,16 @@ The first few lines of a typical charge.parameters file might look like this:
 This a .pdb-like **fixed-format** file. The only terms that matter are the atom name (which determines the nonbonded parameters assigned to the bead) and the two numbers after the "Q". The first of these numbers is the charge on the bead; the second is the hydrodynamic radius of the bead. The "Q" **must** be present for historical reasons. Note that coordinates are present in the file but can be set to zero if desired as they are not used. The formatting after the x,y,z coordinates is `1x,a1,2f10.3`
 
 ### Molecule-specific file formats: 2. internal.parameters file: ###
-This file contains 
+This file contains three sections that describe, respectively, the bonds, angles, and dihedral angles present in the molecule. There are no blank lines between sections.
+
+The first few lines of a typical internal.parameters file might look like this:
+
+`bond         64 (expected number:       64)`
+`         1         1         2  20.00000   3.80269`
+`         1         2         3  20.00000   3.79613`
+
+The "bond" line tells *uiowa_bd* how many lines need to be read, with each line providing the data for one bond.
+The next line 
 
 
 ### parameter file format:
