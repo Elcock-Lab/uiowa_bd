@@ -60,6 +60,8 @@ Most of the *uiowa_bd* code was written from the ground-up by AHE. However, cert
 ## Installation and compilation
 The bulk of the *uiowa_bd* source code is all contained in the single folder `SOURCE`; additional code that handles the reading and writing of .xtc trajectory files (and that I didn’t write: see above) is in the sub-folder `XTC`. A makefile is provided that “gets the job done”, but I don’t claim that this makefile is well-written: I barely understand how makefiles work, and I stopped refining the one provided as soon as it looked like it worked. All of the code is written in Fortran. I assume that the user will compile the code with Intel’s Fortran compiler (ifort) and with Intel’s Math Kernel Library (MKL) installed. The code can probably be adapted to compile with gfortran relatively easily, but care will be needed with routines that are currently handled by MKL: these include the calculation of random numbers, the spotrf routine that is used to compute the Cholesky decomposition of the diffusion tensor, and possibly some others. I am sorry to say that if you attempt to get the code working with any compiler other than ifort you will be on your own. 
 
+---
+
 **Before compiling you will need to do the following:**
 
 1. add ifort to your `PATH` ; **for example**, with our very old installation of ifort we use the following:
@@ -74,6 +76,7 @@ The bulk of the *uiowa_bd* source code is all contained in the single folder `SO
 
 `export MKLROOT=/opt/intel/compilers_and_libraries_2016.2.181/linux/mkl`
 
+---
 
 **Now do the actual compilation in three stages:**
 
