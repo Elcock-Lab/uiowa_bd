@@ -1,6 +1,6 @@
 # *uiowa_bd*
 
-### Note: the code and examples provided here are fully functional but the documentation is a work in progress
+### Please note: the source code provided here is fully functional but the documentation is a work in progress. The example applications described briefly below will be posted into the EXAMPLES folder as soon as the paper referencing *uiowa_bd* is posted, i.e. very soon)
 
 
 ## Overview
@@ -8,15 +8,15 @@
 
 ## Example folders
 
-A number of example directories are provided with the source code that illustrate different uses of *uiowa_bd* and that provide good starting points for understanding the formatting of the various required input files. Further examples may be added in the next few days, but for now we have the following:
+A number of example directories will be provided with the source code that illustrate different uses of *uiowa_bd* and that provide good starting points for understanding the formatting of the various required input files. Further examples may be added in the next few weeks, but for now we will have the following:
 
 1. `NATIVE_PROTEIN_DIFFUSION`
 
-This folder contains all files necessary to run a BD-HI simulation of the small protein Chymotrypsin Inhibitor 2 (CI2) modeled at the C-alpha-only level of resolution. The energetic model used to describe the protein is essentially a Go model: equilibrium bond, angle, and dihedral angles are set to the values found in the native state structure, and favorable Lennard-Jones 12-10 potential functions are added to all pairs of beads that form a contact in the native state structure. The protein is simulated starting in its native state, and HIs are modeled at the Rotne-Prager-Yamakawa level of theory with the result that both the translational and rotational diffusion of the protein is realistically simulated. 
+This folder will contain all files necessary to run a BD-HI simulation of the small protein Chymotrypsin Inhibitor 2 (CI2) modeled at the C-alpha-only level of resolution. The energetic model used to describe the protein is essentially a Go model: equilibrium bond, angle, and dihedral angles are set to the values found in the native state structure, and favorable Lennard-Jones 12-10 potential functions are added to all pairs of beads that form a contact in the native state structure. The protein is simulated starting in its native state, and HIs are modeled at the Rotne-Prager-Yamakawa level of theory with the result that both the translational and rotational diffusion of the protein is realistically simulated. 
 
 2. `PROTEIN_FOLDING`
 
-This folder contains all files necessary to run a BD-HI simulation of the small protein Cold-shock Protein B (CSPB) modeled at the C-alpha-only level of resolution. Again, the energetic model used here is that of a Go model, but in this case the initial configuration of the protein is an unfolded one and the BD-HI simulation continues until the protein folds back to its native state. Using the jargon from the protein folding field, we characterize the extent of folding of each configuration of the protein using the term "Q", which represents the fraction of native contacts that are successfully formed in the given configuration. The simulation is set up to quit when the protein reaches a value of Q = 0.90.
+This folder will contain all files necessary to run a BD-HI simulation of the small protein Cold-shock Protein B (CSPB) modeled at the C-alpha-only level of resolution. Again, the energetic model used here is that of a Go model, but in this case the initial configuration of the protein is an unfolded one and the BD-HI simulation continues until the protein folds back to its native state. Using the jargon from the protein folding field, we characterize the extent of folding of each configuration of the protein using the term "Q", which represents the fraction of native contacts that are successfully formed in the given configuration. The simulation is set up to quit when the protein reaches a value of Q = 0.90.
 
 ## Referencing *uiowa_bd*
 The following lists the principal papers that have marked the development of *uiowa_bd*. If you have to cite only one publication then it makes sense for this to be the most recent (Tworek & Elcock, 2023) since this paper coincides with the release of this version of the code. However, depending on what features of the code you use, you may need to cite additional publications from other people (see treecode and fixman entries below).
