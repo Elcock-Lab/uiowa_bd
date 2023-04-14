@@ -228,7 +228,15 @@ The next line lists nine numbers. In order, these are: (1) the number of the mol
 
 ### parameter file format:
 
-This contains one line per atom type present in the system. The atom type is dictated by the atom name provided in the charge.parameters files
+This contains one line per atom type present in the system. The atom type is dictated by the atom name provided in the charge.parameters files. The first few lines of a typical parameter.file might look like:
+
+`C   4.00  0.10 0`
+
+`CA  4.00  0.10 0`
+
+`CB  4.00  0.10 1`
+
+There are four entries on each line. The first is the atom name as it appears in the charge.parameters file. The next two entries are the conventional sigma and epsilon values associated with Lennard-Jones interactions: sigma is measured in Angstroms, epsilon in kcal/mol. The fourth entry is a flag that determines whether the full 12-10 interaction is to be used or not for that atom type. If the flag is zero then only the 1/r12 repulsive component is used; if the flag is one then both the 1/r12 repulsive and 1/r10 attractive components are used. The full 12-10 interaction is only calculated for pairs of atom types where **both** atom types have the flag of one. In the example shown above, therefore, CB-CB interactions would use the full 12-10 interaction, but C-CB and CA-CB interactions would be treated as purely repulsive. Note that the combining rules for mixed interactions use the geometric means for both the epsilong and sigma values.  
 
 ### uiowa_bd input file format:
 
