@@ -1,5 +1,7 @@
 # *uiowa_bd*
 
+### Note: the code and examples provided here are fully functional but the documentation is a work in progress
+
 
 ## Overview
 *uiowa_bd* is a parallelized program that performs Brownian dynamics (BD) simulations of macromolecules. It uses simple molecular mechanics models of the kind widely used in other simulation codes to model the internal degrees of freedom of molecules, but also has the ability to include hydrodynamic interactions (HIs) between atoms (or more generally, beads), calculated at the Rotne-Prager-Yamakawa level of theory. This makes it useful for accurately simulating the translational and rotational diffusion of macromolecules, as well as their associations, in a fundamentally implicit solvent model. 
@@ -121,7 +123,7 @@ As with all simulation codes, a significant amount of time and effort will be sp
 
 ## Using *uiowa_bd*: summary of input
 
-All input files and their required formats are described in detail later; probably the best way to get a "feel" for these inputs is to look in the various EXAMPLE folders that are provided. At the most basic level, however, the following files are required as inputs to *uiowa_bd*:
+All input files and their required formats are described in detail later, but probably the best (and certainly the quickest) way to get a "feel" for all of these inputs is to look in the various EXAMPLE folders that are provided. At the most basic level, however, the following files are required as inputs to *uiowa_bd*:
 
 1. An **input file** (e.g. uiowa_bd.inp) that lists all of the details of the system to be simulated. Conceptually, this file combines features that are found in GROMACS’ grompp.mdp and topol.top files, but it uses a very different format.
 
