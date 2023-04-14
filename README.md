@@ -48,7 +48,7 @@ The second, invoked with the keyword `langevin` is the closely-related Langevin 
     
 5. the code that allows the late Prof Marshall Fixman’s Chebyshev polynomial-based method to be used to calculate correlated random displacements borrows very heavily from a corresponding C routine that was written by Tihamer Geyer when he was a faculty member at the University of Saarland and that was implemented in his BD code. If the Fixman code is used please consider citing:
 
-    Geyer T (2011) **Many-particle Brownian and Langevin dynamics simulations with the Brownmove package.** *BMC Biophyics* **4**:7.
+Geyer T (2011) **Many-particle Brownian and Langevin dynamics simulations with the Brownmove package.** *BMC Biophyics* **4**:7.
 
 6. while the current version of the code uses the Intel MKL routine `spotrf` to compute the Cholesky decomposition of the diffusion tensor, I want to acknowledge Dr Jonathan Hogg’s help in implementing an earlier openmp-parallelized routine for performing the same operation (HSL_MP54). It was Dr Hogg’s Cholesky decomposition code that enabled a number of our earlier studies with *uiowa_bd* to be completed.
 
@@ -169,7 +169,7 @@ As is detailed in the section describing the input options, *uiowa_bd* offers a 
 ## Overview of file formats
 With only one or two exceptions (see below) all of the inputs that are provided to the code are expected to be in fixed format. This means that you should *never* mess around with the alignment of columns in files, or skip lines etc. as I cannot vouch for the behavior that will result. In what follows I will use Fortran’s description of integer and float types to specify the format – e.g. `a3` means a word (string) of 3 characters, `f15.5` means a real number that has a total of 15 characters, 5 of which come after the decimal point; `i8` means an integer that has a total of 8 characters.
 
-### Molecule-specific file formats: 1. charge.parameters file: ###
+### Molecule-specific file formats: 1. charge.parameters file format: ###
 
 The first few lines of a typical charge.parameters file might look like this:
 
@@ -181,7 +181,7 @@ The first few lines of a typical charge.parameters file might look like this:
 
 This a .pdb-like **fixed-format** file. The only terms that matter are the atom name (which determines the nonbonded parameters assigned to the bead) and the two numbers after the "Q". The first of these numbers is the charge on the bead; the second is the hydrodynamic radius of the bead. The "Q" **must** be present for historical reasons. Note that coordinates are present in the file but can be set to zero if desired as they are not used. The formatting after the x,y,z coordinates is `1x,a1,2f10.3`
 
-### Molecule-specific file formats: 2. internal.parameters file: ###
+### Molecule-specific file formats: 2. internal.parameters file format: ###
 
 This is a **fixed-format** file that contains three sections that describe, respectively, the bonds, angles, and dihedral angles present in the molecule. There are no blank lines between sections.
 
@@ -228,7 +228,7 @@ Again, the "dihe" line tells *uiowa_bd* how many lines of dihedral angles need t
 
 The next line lists nine numbers. In order, these are: (1) the number of the molecule type, (2) the first bead in the dihedral, (3) the second bead in the dihedral, (4) the third bead in the dihedral, (5) the fourth bead in the dihedral, (6) the half-height of the period=1 dihedral energy function, (7) the half-height of the period=3 dihedral energy function, (8) the energy-minimum of the period=1 dihedral function (in radians), and (9) 3 times the energy-minimum of the period=3 dihedral function (in radians).
 
-### parameter file format:
+### parameter_file format:
 
 The nonbonded energy model included in *uiowa_bd* is very simple: it consists only of: (1) a Lennard-Jones (LJ) 12-10 interaction (where the 1/r12 term is repulsive, and the 1/r10 term - which can be zero'd out - see below - is attractive), and (2) a Debye-Huckel model of ion-screened electrostatic interactions. Parameter values for the LJ interactions are determined by the parameter.file. It contains one line per atom type present in the system. The atom type is dictated by the atom name provided in the charge.parameters files. The first few lines of a typical parameter.file might look like:
 
@@ -242,7 +242,7 @@ The nonbonded energy model included in *uiowa_bd* is very simple: it consists on
 
 There are four entries on each line. The first is the atom name as it appears in the charge.parameters file. The next two entries are the conventional sigma and epsilon values associated with Lennard-Jones interactions: sigma is measured in Angstroms, epsilon in kcal/mol. The fourth entry is a flag that determines whether the full 12-10 interaction is to be used or not for that atom type. If the flag is zero then only the 1/r12 repulsive component is used; if the flag is greater than zero then both the 1/r12 repulsive and 1/r10 attractive components are used. The full 12-10 interaction is only calculated for pairs of atom types in which **both** atom types have the same value assigned to the flag. In the example shown above, therefore, CB-CB interactions would use the full 12-10 interaction (as would CC-CC interactions) but C-CB, CA-CB, and CC-CB interactions would all be treated as purely repulsive. Note that the combining rules for mixed interactions use the geometric means for both the epsilon and sigma values. For example, in the purely repulsive C-CA interaction, the effective sigma value would be 4.472A while the effective epsilon value would be 0.141 kcal/mol.  
 
-### (optional) go_parameter_file:
+### (optional) go_parameter_file format:
 
 If we wish to reward specific bead pairs when they come into contact (i.e. if we wish to use a Go model to describe one or more molecules), the we will be reading the specified go_parameter_file. This is a **fixed-format** file that specifies which atom types have favorable contacts with other atom types; atom types that form no such contacts do not need to be entered. **Note that there is only one go_parameter_file for the entire system**: many different molecule types can have their own lists of favorable Go contact terms, but they must all be compiled into a **single file**. Here is an example:
 
