@@ -359,7 +359,7 @@ if "2" the coordinates are wrapped on a molecule-by-molecule basis: for the firs
   
 **HI_mode** : if “none” then no HI ; if “RPY” then use Rotne-Prager-Yamakawa HI ; if “OARPY” then use orientationally averaged RPY
 
-**scale_nb** : DEPRECATED : just leave it set to a real number
+**fold_mode** : if +1 then this is nominally a folding/association simulation - we assume the simulation starts in a configuration in which Q is low, and the simulation will proceed until Q >= q_desired ; if -1 then this is nominally an unfolding/dissociation simulation - we assume the simulation starts in a configuration in which Q is high, and the simulation will proceed until Q <= q_desired.
 
 **BD/LD** : if “brownian” use Ermak-McCammon algorithm ; if “langevin” use Geyer & Winter’s Langevin dynamics algorithm
 
