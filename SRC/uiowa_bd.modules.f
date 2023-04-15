@@ -111,6 +111,10 @@ C                       =2 molecule-based wrapping
 
         integer      :: go_primacy ! =1 go only; =2 go + elec ; =3 all
 
+C 2023 v1.1 - add fold_mode = 1 for folding ; =-1 for unfolding
+
+        integer      :: fold_mode
+
 C for mixed_hydrodynamics
 
         integer,allocatable :: atm_to_hyd_atm(:)! converts tot atm to hyd atm

@@ -54,14 +54,26 @@ C check for termination (this code originally used earlier)
 
                 if(iii.eq.mol_Q1.and.jjj.eq.mol_Q2) rat=qtmp
 
-                if(rat.ge.Q_des) then
-                  write(*,87)mol_Q1,mol_Q2,rat,tot_time
-87                format('for mols ',i5,' & ',i5,' Q = ',f10.5,
-     &                   ' at time = ',f20.5)
-                  call write_movie_file(movieframenumber,icrashed,kkk)
-                  call write_restart(movieframenumber,kkk)
-                  write(*,*)'quitting but in the right way  :)'
-                  stop
+C 2023 v1.1 add support for unfolding simulations using fold_mode
+
+                if(fold_mode.eq.1) then
+                  if(rat.ge.Q_des) then
+                    write(*,87)mol_Q1,mol_Q2,rat,tot_time
+87                  format('for mols ',i5,' & ',i5,' Q = ',f10.5,
+     &                     ' at time = ',f20.5,' FOLDED/ASSOCIATED')
+                    call write_movie_file(movieframenumber,icrashed,kkk)
+                    call write_restart(movieframenumber,kkk)
+                    stop
+                  endif
+                elseif(fold_mode.eq.-1) then
+                  if(rat.le.Q_des) then
+                    write(*,88)mol_Q1,mol_Q2,rat,tot_time
+88                  format('for mols ',i5,' & ',i5,' Q = ',f10.5,
+     &                     ' at time = ',f20.5,' UNFOLDED/DISSOCIATED')
+                    call write_movie_file(movieframenumber,icrashed,kkk)
+                    call write_restart(movieframenumber,kkk)
+                    stop
+                  endif
                 endif
 
               endif

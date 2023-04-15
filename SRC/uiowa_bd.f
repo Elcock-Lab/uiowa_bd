@@ -643,10 +643,12 @@ C assumes r_ion = 0, we should probably enforce that here...
       one_third=1.0/3.0
       eight_over_three=8.0/3.0
 
+C 2023 v1.1 read fold_mode as integer (used to be scale_nb)
+
       read(5,*)
       read(5,*)
       read(5,*)parameter_file,atemp,wrap_molecules,
-     &         etemp,gtemp,htemp
+     &         etemp,fold_mode,htemp
 
       i_use_no_elec=.false.
       if(atemp.eq.'yes') i_use_no_elec=.true.
@@ -660,6 +662,25 @@ C assumes r_ion = 0, we should probably enforce that here...
         write(*,*)'will wrap coordinates in movie files by molecule'
       endif
       write(*,*)
+
+C 2023 v1.1 write whether we are in folding or unfolding mode
+
+      if(fold_mode.eq.1) then
+        write(*,*)
+        write(*,*)'this is nominally a folding simulation'
+        write(*,*)
+      elseif(fold_mode.eq.-1) then
+        write(*,*)
+        write(*,*)'this is nominally an unfolding simulation'
+        write(*,*)
+      else
+        write(*,*)
+        write(*,*)'fold_mode is set to ',fold_mode
+        write(*,*)'this is a fatal error: must be +1 or -1'
+        write(*,*)'quitting :('
+        write(*,*)
+        stop
+      endif
 
 C we default to saying i_use_hydro=.true.
 
@@ -740,8 +761,9 @@ C cutoff and Ewald electrostatics - not for Ewald grid electrostatics
       i_grow_rs=.false.
 
 C keep scaling factor for 'nb' entry when using Cholesky
+C 2023 v1.1 just set to 1.0 here - we will use gtemp for fold_mode
 
-      scale_nb_temp=gtemp
+      scale_nb_temp=1.0
 
 C read langevin from last column (htemp)
 
