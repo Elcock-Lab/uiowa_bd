@@ -1,0 +1,12 @@
+
+these files taken from GDZ n05:
+
+/scratch/aelcock/CSPB_HI0100_BROWNIAN/UNFOLDED_RPY/
+
+I centered the restart.file (it should be nicely unfolded)
+and I changed the Go epsilon from 0.05 to 0.80
+
+I copied the uiowa_bd.inp.RPY file from the EXAMPLE_NATIVE_PROTEIN_DIFFUSION folder
+and change the Q-des entries so that it should terminate upon folding...
+
+
